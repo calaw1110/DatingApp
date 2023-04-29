@@ -15,10 +15,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// 因調整launchSetting.json 註解以下功能 
+// app.UseHttpsRedirection();
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+// 暫無使用授權相關
+// app.UseAuthorization();
 
 app.MapControllers();
 
