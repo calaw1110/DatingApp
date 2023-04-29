@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // 加入資料庫連線設定
-builder.Services.AddDbContext<DatingAppData>(option =>
+builder.Services.AddDbContext<DatingAppDataContext>(option =>
 {
     option.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
