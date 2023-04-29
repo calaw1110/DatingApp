@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 // 加入資料庫連線設定
 builder.Services.AddDbContext<DatingAppData>(option =>
 {
-    option.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnetion"));
+    option.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 
