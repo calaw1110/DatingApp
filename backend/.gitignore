@@ -475,3 +475,7 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# 自訂
+/DatingApp.API/datingapp.db
+/DatingApp.API/datingapp.db-*
