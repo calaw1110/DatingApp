@@ -1,6 +1,7 @@
 using DatingApp.API.Data;
 using DatingApp.API.Extensions;
 using DatingApp.API.Interfaces;
+using DatingApp.API.Middleware;
 using DatingApp.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -63,6 +64,13 @@ if (app.Environment.IsDevelopment())
 	app.UseSwagger();
 	app.UseSwaggerUI();
 }
+
+
+// add error handler middleware
+app.UseMiddleware<ExceptionMiddleware>();
+
+
+
 // 因調整launchSetting.json 註解以下功能 
 // app.UseHttpsRedirection();
 
@@ -78,5 +86,20 @@ app.UseAuthorization();
 
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var services =scope.ServiceProvider;
+try
+{
+	var context = services.GetRequiredService<DatingAppDataContext>();
+	
+	await context.Database.MigrateAsync();
+	await Seed.SeedUses(context);
+}
+catch(Exception ex)
+{
+	var logger = services.GetService<ILogger<Program>>();
+	logger.LogError(ex, "An error occurred during migrations");
+}
 
 app.Run();
