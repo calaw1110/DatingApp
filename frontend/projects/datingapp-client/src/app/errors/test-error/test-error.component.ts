@@ -31,9 +31,7 @@ export class TestErrorComponent implements OnInit {
         })
     }
     get401Error() {
-        const user = this.accountService.getCurrentUser();
-
-        this.http.get(this.baseUrl + 'buggy/auth', { headers: { 'Authorization': 'Bearer ' + user?.token } }).subscribe({
+        this.http.get(this.baseUrl + 'buggy/auth').subscribe({
             next: (response) => console.log('next!', response),
             error: (err) => console.error('error!', err)
         })
