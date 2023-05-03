@@ -1,0 +1,15 @@
+<p>test-error works!</p>
+
+<button class="btn btn-primary me-2" (click)="get400Error()">觸發400</button>
+<button class="btn btn-primary me-2" (click)="get401Error()">觸發401</button>
+<button class="btn btn-primary me-2" (click)="get404Error()">觸發404</button>
+<button class="btn btn-primary me-2" (click)="get500Error()">觸發500</button>
+
+
+<div class="row mt-5" *ngIf="validationErrors.length>0">
+    <ul class="text-danger">
+        <li class="h2" *ngFor="let error of validationErrors">
+            {{error}}
+        </li>
+    </ul>
+</div>

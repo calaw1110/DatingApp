@@ -1,0 +1,22 @@
+<div class="container">
+
+    <h3> Interal serve error - refreshing the page will make the error disappear</h3>
+    <ng-container *ngIf="error">
+        <h5 class="text-danger"> Error:{{error.message}} </h5>
+        <p class="fw-bold">Note: If you are seeing this then angluar is probably not to blame</p>
+        <ol>
+            <li>Open chrome dev tools! Then cjecl th failing request in the network tab</li>
+            <li>Examine th request URL - what APO endpoint are you requesting?</li>
+            <li>Reproduce the problem in Postman - if we get same error Angular is 100% not the problem</li>
+        </ol>
+        <p class="fw-bold">Following is the stack trace - the first few lines will tell you whitch line of code caused
+            the issue in the API</p>
+        <code class="mt-5 fw-bold bg-light text-danger">
+            {{error.details}}
+        </code>
+    </ng-container>
+
+
+
+
+</div>

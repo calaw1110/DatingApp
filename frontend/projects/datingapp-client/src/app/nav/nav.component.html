@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-primary">
+    <div class="container">
+        <a class="navbar-brand" routerLink="/">Dating App</a>
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <ng-container *ngIf="accountService.currentUser$ | async">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/members" routerLinkActive="active">Matchs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/lists" routerLinkActive="active">Lists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/messages" routerLinkActive="active">Messages</a>
+                </li>
+            </ng-container>
+            <li class="nav-item">
+                <a class="nav-link" routerLink="/test-error" routerLinkActive="active">TestError</a>
+            </li>
+        </ul>
+
+        <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
+            <button id="button-basic" dropdownToggle type="button"
+                class="btn btn-link text-light text-decoration-none dropdown-toggle"
+                aria-controls="dropdown-basic">Welcome {{user.username | titlecase}} <span class="caret"></span></button>
+            <div id="dropdown-basic" *dropdownMenu class="dropdown-menu mt-2" role="menu"
+                aria-labelledby="button-basic">
+                <a href="" role="menuitem" class="dropdown-item">Edit Profile</a>
+                <a href="" role="menuitem" class="dropdown-item" (click)="logout()">Logout</a>
+            </div>
+        </div>
+
+
+        <form *ngIf="!(accountService.currentUser$ |async)" #loginForm="ngForm" class="d-flex" (ngSubmit)="login()"
+            autocomplete="off">
+            <input [(ngModel)]="model.username" name="username" class="form-control me-2" type="text"
+                placeholder="帳號" />
+            <input [(ngModel)]="model.password" name="password" class="form-control me-2" type="password"
+                placeholder="密碼" />
+            <button class="btn btn-secondary" type="submit">login</button>
+        </form>
+    </div>
+</nav>
