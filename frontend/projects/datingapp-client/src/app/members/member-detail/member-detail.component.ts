@@ -5,11 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 
 @Component({
-    selector: 'app-merber-detail',
-    templateUrl: './merber-detail.component.html',
-    styleUrls: ['./merber-detail.component.css']
+    selector: 'app-member-detail',
+    templateUrl: './member-detail.component.html',
+    styleUrls: ['./member-detail.component.css']
 })
-export class MerberDetailComponent implements OnInit {
+export class MemberDetailComponent implements OnInit {
     member: Member | undefined;
     galleryOptions: NgxGalleryOptions[] = [];
     galleryImages: NgxGalleryImage[] = [];
