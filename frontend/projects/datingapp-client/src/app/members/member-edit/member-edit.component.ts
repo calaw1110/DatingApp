@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Member } from '../../_models/member';
 import { User } from '../../_models/user';
 import { AccountService } from '../../_services/account.service';
@@ -14,6 +14,13 @@ import { NgForm } from '@angular/forms';
 })
 export class MemberEditComponent implements OnInit {
     @ViewChild('editForm') editForm: NgForm | undefined;
+
+    // 監聽瀏覽器事件
+    @HostListener('window:beforeunload', ['$event']) inloadNotification($event: any) {
+        if (this.editForm?.dirty) {
+            $event.returnValue = true;
+        }
+    }
     member!: Member;
     user: User | null = null;
     constructor(private accountService: AccountService,
@@ -30,6 +37,7 @@ export class MemberEditComponent implements OnInit {
     ngOnInit(): void {
         this.loadMember();
     }
+    
     loadMember() {
         if (!this.user) return;
         this.memberService.getMember(this.user.username).subscribe({
@@ -40,8 +48,12 @@ export class MemberEditComponent implements OnInit {
     }
 
     updateMember() {
-        console.log('update');
-        this.toastr.success('Update Completed')
-        this.editForm?.reset(this.member)
+        console.log('update member');
+        this.memberService.updateMember(this.editForm?.value).subscribe({
+            next: response => {
+                this.toastr.success('Update Completed')
+                this.editForm?.reset(this.member)
+            }
+        })
     }
 }
