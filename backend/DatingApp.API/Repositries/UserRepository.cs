@@ -19,7 +19,7 @@ namespace DatingApp.API.Repositries
 			this._mapper = mapper;
 		}
 
-		public async Task<MemberDto> GetMemberByUsernameAsync(string username)
+		public async Task<MemberDto> GetMemberAsync(string username)
 		{
 			return await _context.Users.Where(x => x.UserName == username).ProjectTo<MemberDto>(_mapper.ConfigurationProvider).SingleOrDefaultAsync();
 		}

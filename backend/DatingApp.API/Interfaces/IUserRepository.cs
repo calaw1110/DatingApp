@@ -17,6 +17,6 @@ namespace DatingApp.API.Interfaces
 
 		Task<IEnumerable<MemberDto>> GetMembersAsync();
 
-		Task<MemberDto> GetMemberByUsernameAsync(string username);
+		Task<MemberDto> GetMemberAsync(string username);
 	}
 }
