@@ -31,11 +31,12 @@ builder.Services.AddSwaggerGen(options =>
 	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 	{
 		Name = "Authorization",
-		Type = SecuritySchemeType.ApiKey,
+		// Type使用SecuritySchemeType.Http，輸入Token時 不用打上 「Bearer 」
+		Type = SecuritySchemeType.Http,
 		Scheme = "Bearer",
 		BearerFormat = "JWT",
 		In = ParameterLocation.Header,
-		Description = "Copy JWT Token into the value field: {token}"
+		Description = "JWT驗證 請貼上TOKEN: {token}"
 	});
 
 	// 設定 "Bearer" 的 SecurityScheme
