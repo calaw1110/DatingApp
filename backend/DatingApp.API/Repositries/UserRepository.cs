@@ -30,11 +30,23 @@ namespace DatingApp.API.Repositries
 
 		public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
 		{
-			var query = _context.Users
-				.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
-				// 讓ef對此次查詢結果不追蹤，提高查詢的性能，節省記憶體
-				.AsNoTracking();
-			return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
+			var query = _context.Users.AsQueryable();
+			query = query.Where(w => w.UserName != userParams.CurrentUserName);
+			query = query.Where(w => w.Gender == userParams.Gender);
+
+			var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+			var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge ));
+			query = query.Where(w=>w.DateOfBirth>=minDob &&  w.DateOfBirth<=maxDob);
+
+			return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
+
+
+
+			//var query = _context.Users
+			//	.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+			//	// 讓ef對此次查詢結果不追蹤，提高查詢的性能，節省記憶體
+			//	.AsNoTracking();
+			//return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
 		}
 
 		public async Task<AppUser> GetUserByIdAsync(int id)
