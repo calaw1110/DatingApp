@@ -2,6 +2,7 @@ using AutoMapper;
 using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
 using DatingApp.API.Extensions;
+using DatingApp.API.Helper;
 using DatingApp.API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -24,11 +25,16 @@ namespace DatingApp.API.Controllers
 			this._photoService = photoService;
 		}
 
-
+		// [FromQuery] ノ眖 HTTP 叫―琩高才﹃ URL い? 场だい竕﹚把计
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+		public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
 		{
-			var users = await _userRepository.GetMembersAsync();
+			var users = await _userRepository.GetMembersAsync(userParams);
+
+			Response.AddPaginationHeader(
+				new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages)
+				);
+
 			return Ok(users);
 		}
 
@@ -140,7 +146,7 @@ namespace DatingApp.API.Controllers
 				var result = await _photoService.DeletePhotoAsync(photo.PublicId);
 				if (result.Error != null) return BadRequest(result.Error);
 			}
-			
+
 			user.Photos.Remove(photo);
 
 			if (await _userRepository.SavaAllAsync()) return Ok();
