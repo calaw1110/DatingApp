@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Member } from '../_models/member';
 import { map, of } from 'rxjs';
 import { Photo } from '../_models/photo';
+import { PaginatedResult } from '../_models/Pagination';
 
 @Injectable({
     providedIn: 'root'
@@ -11,16 +12,31 @@ import { Photo } from '../_models/photo';
 export class MembersService {
     baseUrl = environment.apiUrl;
     members: Member[] = [];
-
+    paginatedResult: PaginatedResult<Member[]> = new PaginatedResult<Member[]>;
 
     constructor(private http: HttpClient) { }
 
-    getMembers() {
-        if (this.members.length > 0) return of(this.members);
-        return this.http.get<Member[]>(this.baseUrl + 'users').pipe(
-            map(members => {
-                this.members = members;
-                return members;
+    getMembers(page?: number, itemsPerPage?: number) {
+        let params = new HttpParams();
+        // 建立查詢分頁資訊參數
+        if (page && itemsPerPage) {
+            params = params.append('pageNumber', page);
+            params = params.append('pageSize', itemsPerPage);
+        }
+
+        // if (this.members.length > 0) return of(this.members);
+        return this.http.get<Member[]>(this.baseUrl + 'users', { observe: 'response', params }).pipe(
+            map(response => {
+                if (response.body) {
+                    // 接body資料，查詢結果
+                    this.paginatedResult.result = response.body
+                }
+                const pagination = response.headers.get('Pagination');
+                if (pagination) {
+                    // 接header資料，分頁資訊
+                    this.paginatedResult.pagination = JSON.parse(pagination)
+                }
+                return this.paginatedResult;
             })
         )
     }
