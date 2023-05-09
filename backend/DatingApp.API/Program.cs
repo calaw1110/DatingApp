@@ -35,7 +35,7 @@ builder.Services.AddSwaggerGen(options =>
 		Scheme = "Bearer",
 		BearerFormat = "JWT",
 		In = ParameterLocation.Header,
-		Description = "JWT Authorization"
+		Description = "Copy JWT Token into the value field: {token}"
 	});
 
 	// 設定 "Bearer" 的 SecurityScheme
