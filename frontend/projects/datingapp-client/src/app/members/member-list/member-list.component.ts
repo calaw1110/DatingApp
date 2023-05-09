@@ -1,9 +1,12 @@
+import { UserParams } from './../../_models/userParam';
 import { Component, OnInit } from '@angular/core';
 import { MembersService } from '../../_services/members.service';
 import { Member } from '../../_models/member';
-import { Observable } from 'rxjs';
+import { take } from 'rxjs';
 import { Pagination } from '../../_models/Pagination';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
+import { AccountService } from '../../_services/account.service';
+import { User } from '../../_models/user';
 
 @Component({
     selector: 'app-member-list',
@@ -14,16 +17,28 @@ export class MemberListComponent implements OnInit {
 
     members: Member[] | undefined;
     pagination: Pagination | undefined;
-    pageNumber = 1;
-    pageSize = 5;
-    constructor(private membersService: MembersService) { }
+    userParams!: UserParams;
+    user!: User;
+    genderList = [{ value: 'male', display: 'Males' }, { value: 'female', display: 'Females' }]
+
+    constructor(private membersService: MembersService, private accountService: AccountService) {
+        this.accountService.currentUser$.pipe(take(1)).subscribe({
+            next: user => {
+                if (user) {
+                    this.user = user;
+                    this.userParams = new UserParams(this.user);
+                }
+            }
+        })
+    }
 
     ngOnInit(): void {
         this.loadMembers();
     }
 
     loadMembers() {
-        this.membersService.getMembers(this.pageNumber, this.pageSize).subscribe({
+        if (!this.userParams) return;
+        this.membersService.getMembers(this.userParams).subscribe({
             next: response => {
                 if (response.result && response.pagination) {
                     this.members = response.result;
@@ -32,9 +47,19 @@ export class MemberListComponent implements OnInit {
             }
         })
     }
+
+    resetFilters() {
+        if (this.user) {
+            this.userParams = new UserParams(this.user);
+            this.loadMembers();
+        }
+    }
+
     pageChaged(event: PageChangedEvent) {
         console.log(event);
-         this.pageNumber = event.page;
-         this.loadMembers()
+        if (this.userParams && this.userParams.pageNumber !== event.page) {
+            this.userParams.pageNumber = event.page;
+            this.loadMembers()
+        }
     }
 }

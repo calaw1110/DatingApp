@@ -22,8 +22,7 @@
             <img src="{{user.photoUrl || '../../../assets/user.png'}}" alt="user photo">
             <button id="button-basic" dropdownToggle type="button"
                 class="btn btn-link text-light text-decoration-none dropdown-toggle "
-                aria-controls="dropdown-basic">Welcome {{user.username | titlecase}} <span
-                    class="caret"></span></button>
+                aria-controls="dropdown-basic">Welcome {{ user.knownAs }} <span class="caret"></span></button>
             <div id="dropdown-basic" *dropdownMenu class="dropdown-menu mt-2 dropdown-menu-end" role="menu"
                 aria-labelledby="button-basic">
                 <a href="" role="menuitem" class="dropdown-item" routerLink="/member/edit">Edit Profile</a>
