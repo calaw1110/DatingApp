@@ -50,7 +50,7 @@ export class MemberEditComponent implements OnInit {
     updateMember() {
         console.log('update member');
         this.memberService.updateMember(this.editForm?.value).subscribe({
-            next: response => {
+            next: () => {
                 this.toastr.success('Update Completed')
                 this.editForm?.reset(this.member)
             }
