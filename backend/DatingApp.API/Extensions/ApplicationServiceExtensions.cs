@@ -34,6 +34,9 @@ namespace DatingApp.API.Extensions
 			services.Configure<CloudinaryHelper>(config.GetSection("CloudinarySettings"));
 			services.AddScoped<IPhotoService, PhotoService>();
 
+			// 登入紀錄以及更動登入時間
+			services.AddScoped<LogUserActivityHelper>();
+
 			return services;
 		}
 	}

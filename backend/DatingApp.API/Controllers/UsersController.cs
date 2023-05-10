@@ -6,7 +6,6 @@ using DatingApp.API.Helper;
 using DatingApp.API.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace DatingApp.API.Controllers
 {
@@ -34,7 +33,6 @@ namespace DatingApp.API.Controllers
 
 			if (string.IsNullOrEmpty(userParams.Gender))
 			{
-				// 異性搜尋
 				userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
 			}
 
@@ -70,7 +68,7 @@ namespace DatingApp.API.Controllers
 			_mapper.Map(memberUpdateDto, user);
 
 			// 更新資料庫資料 
-			if (await _userRepository.SavaAllAsync())
+			if (await _userRepository.SaveAllAsync())
 				// 更新成功 使用 status code 204 回傳 
 				return NoContent();
 
@@ -103,7 +101,7 @@ namespace DatingApp.API.Controllers
 
 			user.Photos.Add(photo);
 
-			if (await _userRepository.SavaAllAsync())
+			if (await _userRepository.SaveAllAsync())
 			{
 				// status 201 
 				return CreatedAtAction(nameof(GetUsers), new { username = user.UserName }, _mapper.Map<PhotoDto>(photo));
@@ -134,7 +132,7 @@ namespace DatingApp.API.Controllers
 			if (currentMain != null) currentMain.IsMain = false;
 			photo.IsMain = true;
 
-			if (await _userRepository.SavaAllAsync()) return NoContent();
+			if (await _userRepository.SaveAllAsync()) return NoContent();
 
 			return BadRequest("Problem setting the main photo");
 		}
@@ -158,11 +156,9 @@ namespace DatingApp.API.Controllers
 
 			user.Photos.Remove(photo);
 
-			if (await _userRepository.SavaAllAsync()) return Ok();
+			if (await _userRepository.SaveAllAsync()) return Ok();
 
 			return BadRequest("Problem delete the photo");
 		}
-
-
 	}
 }
