@@ -22,6 +22,21 @@
         </div>
         <button class="btn btn-primary ms-1" type="submit">Apply Filters</button>
         <button class="btn btn-secondary ms-1" type="button" (click)="resetFilters()">Reset</button>
+
+        <div class="col">
+            <div class="btn-group float-end">
+                <button class="btn btn-primary" type="button" name="orderBy" btnRadio="lastActive" [(ngModel)]="userParams.orderBy"
+                    (click)="loadMembers()">
+                    Last Active
+                </button>
+                <button class="btn btn-primary" type="button" name="orderBy" btnRadio="created" [(ngModel)]="userParams.orderBy"
+                    (click)="loadMembers()">
+                    Newest Member
+                </button>
+            </div>
+        </div>
+
+
     </form>
 </div>
 
