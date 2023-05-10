@@ -35,8 +35,14 @@ namespace DatingApp.API.Repositries
 			query = query.Where(w => w.Gender == userParams.Gender);
 
 			var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
-			var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge ));
-			query = query.Where(w=>w.DateOfBirth>=minDob &&  w.DateOfBirth<=maxDob);
+			var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+			query = query.Where(w => w.DateOfBirth >= minDob && w.DateOfBirth <= maxDob);
+
+			query = userParams.OrderBy switch
+			{
+				"created" => query.OrderByDescending(o => o.Created),
+				_ => query.OrderByDescending(o => o.LastActive)
+			};
 
 			return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
 
@@ -70,7 +76,7 @@ namespace DatingApp.API.Repositries
 				.ToListAsync();
 		}
 
-		public async Task<bool> SavaAllAsync()
+		public async Task<bool> SaveAllAsync()
 		{
 			return await _context.SaveChangesAsync() > 0;
 		}
