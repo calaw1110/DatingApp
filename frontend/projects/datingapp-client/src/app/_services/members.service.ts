@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 import { PaginatedResult } from '../_models/Pagination';
 import { Member } from '../_models/member';
 import { User } from '../_models/user';
+import { Like } from './../_models/like';
 import { UserParams } from './../_models/userParam';
 import { AccountService } from './account.service';
 
@@ -20,6 +21,9 @@ export class MembersService {
 
     /** 會員資料的快取 */
     memberCache = new Map();
+
+    /** like list cache */
+    likeListCache = new Map();
 
     /** 使用者資料 */
     user: User | undefined;
@@ -83,7 +87,7 @@ export class MembersService {
 
         // 無會員快取資料執行以下
 
-        // 建立會員搜尋條件參數
+        // 建立會員查詢參數
         let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
         params = params.append('minAge', userParams.minAge);
         params = params.append('maxAge', userParams.maxAge);
@@ -93,7 +97,6 @@ export class MembersService {
 
         return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params).pipe(
             map(response => {
-                console.log(response);
                 this.memberCache.set(Object.values(userParams).join('-'), response);
                 return response;
             })
@@ -166,10 +169,30 @@ export class MembersService {
     /**
      * get likes
      * @param {string} predicate - 過濾條件
+     * @param {number} pageNumber - 目標頁碼
+     * @param {number} pageSize - 顯示筆數
      * @returns {Observable<any>} 可觀察物件
      */
-    getLikes(predicate: string) {
-        return this.http.get<Member[]>(this.baseUrl + 'likes/?predicate=' + predicate);
+    getLikes(predicate: string, pageNumber: number, pageSize: number) {
+        // like list 查詢參數
+        const userLikeListParams = { 'predicate': predicate, 'pageNumber': pageNumber, 'pageSize': pageSize };
+
+        // 嘗試取得like list快取資料 
+        const response = this.likeListCache.get(Object.values(userLikeListParams).join('-'));
+
+        // 若有快取資料，將其轉換成 Observable 物件並返回
+        if (response) return of(response);
+
+
+        let params = this.getPaginationHeaders(userLikeListParams.pageNumber, userLikeListParams.pageSize);
+        params = params.append('predicate', userLikeListParams.predicate);
+
+        return this.getPaginatedResult<Like[]>(this.baseUrl + 'likes', params).pipe(
+            map(response => {
+                this.likeListCache.set(Object.values(userLikeListParams).join('-'), response);
+                return response;
+            })
+        );
     }
 
     /**
@@ -199,7 +222,7 @@ export class MembersService {
     /**
      * 取得分頁標頭
      * @param {number} pageNumber - 目標頁碼
-     * @param {number} pageSize -   每頁項目數量
+     * @param {number} pageSize -  顯示比數
      * @returns {HttpParams} HTTP 請求的參數，包含分頁相關資訊
      */
     private getPaginationHeaders(pageNumber: number, pageSize: number): HttpParams {
