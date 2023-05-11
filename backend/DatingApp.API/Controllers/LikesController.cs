@@ -54,6 +54,8 @@ namespace DatingApp.API.Controllers
 		{
 			likeParams.UserId = User.GetUserId();
 
+			if (string.IsNullOrEmpty(likeParams.Predicate)) likeParams.Predicate = "liked";
+
 			var users = await _likeRepository.GetUserLikes(likeParams);
 
 			Response.AddPaginationHeader(
