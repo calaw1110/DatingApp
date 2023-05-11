@@ -121,7 +121,7 @@ export class MembersService {
     /**
      * 更新成員資訊
      * @param {Member} member - 要更新的成員
-     * @returns {Observable<void>} 空的可觀察物件
+     * @returns {Observable<void>} 可觀察物件
      */
     updateMember(member: Member): Observable<void> {
         return this.http.put(this.baseUrl + 'users', member).pipe(
@@ -138,7 +138,7 @@ export class MembersService {
     /**
      * 設定指定照片為主要照片
      * @param {number} photoId - 要設定為主要照片的照片 ID
-     * @returns {Observable<any>} 空的可觀察物件
+     * @returns {Observable<any>} 可觀察物件
      */
     setMainPhoto(photoId: number): Observable<any> {
         // 執行 HTTP PUT 請求，將指定照片設定為主要照片，並返回一個可觀察物件
@@ -148,13 +148,29 @@ export class MembersService {
     /**
      * 刪除指定照片
      * @param {number} photoId - 要刪除的照片 ID
-     * @returns {Observable<any>} 空的可觀察物件
+     * @returns {Observable<any>} 可觀察物件
      */
     deletePhoto(photoId: number): Observable<any> {
         // 執行 HTTP DELETE 請求，刪除指定照片，並返回一個可觀察物件
         return this.http.delete(this.baseUrl + 'users/delete-photo/' + photoId);
     }
+    /**
+     * add likes
+     * @param {string} username - 要喜歡的使用者的使用者名稱
+     * @returns {Observable<any>} 可觀察物件
+     */
+    addLike(username: string) {
+        return this.http.post(this.baseUrl + 'likes/' + username, {});
+    }
 
+    /**
+     * get likes
+     * @param {string} predicate - 過濾條件
+     * @returns {Observable<any>} 可觀察物件
+     */
+    getLikes(predicate: string) {
+        return this.http.get<Member[]>(this.baseUrl + 'likes/?predicate=' + predicate);
+    }
 
     /**
      * 取得分頁結果
