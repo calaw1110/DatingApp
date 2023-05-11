@@ -11,7 +11,6 @@ namespace DatingApp.API.Extensions
 	{
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
 		{
-
 			// 加入資料庫連線設定
 			services.AddDbContext<DatingAppDataContext>(option =>
 			{
@@ -22,10 +21,11 @@ namespace DatingApp.API.Extensions
 
 			services.AddCors();
 
-			// 加入自訂Service 
+			// 加入自訂Service
 
 			services.AddScoped<ITokenService, TokenService>();
 			services.AddScoped<IUserRepository, UserRepository>();
+			services.AddScoped<ILikeRepository, LikesRepository>();
 
 			// 加入automapper
 			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
