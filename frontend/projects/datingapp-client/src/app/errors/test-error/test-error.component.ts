@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { AccountService } from '../../service/account.service';
+import { AccountService } from '../../_services/account.service';
 
 @Component({
     selector: 'app-test-error',

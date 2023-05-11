@@ -1,0 +1,16 @@
+<div class="mb-3">
+    <input type="{{type}}" [class.is-invalid]="control.touched && control.invalid" class="form-control"
+        [formControl]="control" placeholder="{{label}}">
+    <div class="invalid-feedback" *ngIf="control.errors?.['required']">
+        請輸入 {{label}}
+    </div>
+    <div class="invalid-feedback" *ngIf="control.errors?.['minlength']">
+        {{label}} 長度至少為 {{control.errors?.['minlength'].requiredLength}}
+    </div>
+    <div class="invalid-feedback" *ngIf="control.errors?.['maxlength']">
+        {{label}} 長度至多為 {{control.errors?.['maxlength'].requiredLength}}
+    </div>
+    <div class="invalid-feedback" *ngIf="control.errors?.['noMatching']">
+        密碼與確認密碼不相符
+    </div>
+</div>

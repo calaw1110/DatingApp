@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
 import {
-    HttpRequest,
-    HttpHandler,
+    HttpErrorResponse,
     HttpEvent,
+    HttpHandler,
     HttpInterceptor,
-    HttpErrorResponse
+    HttpRequest
 } from '@angular/common/http';
-import { Observable, catchError } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Observable, catchError } from 'rxjs';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
