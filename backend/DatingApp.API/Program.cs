@@ -1,13 +1,8 @@
 using DatingApp.API.Data;
 using DatingApp.API.Extensions;
-using DatingApp.API.Interfaces;
 using DatingApp.API.Middleware;
-using DatingApp.API.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,11 +26,12 @@ builder.Services.AddSwaggerGen(options =>
 	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
 	{
 		Name = "Authorization",
-		Type = SecuritySchemeType.ApiKey,
+		// Type使用SecuritySchemeType.Http，輸入Token時 不用打上 「Bearer 」
+		Type = SecuritySchemeType.Http,
 		Scheme = "Bearer",
 		BearerFormat = "JWT",
 		In = ParameterLocation.Header,
-		Description = "JWT Authorization"
+		Description = "JWT驗證 請貼上TOKEN: {token}"
 	});
 
 	// 設定 "Bearer" 的 SecurityScheme

@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
+using DatingApp.API.Helper;
 using DatingApp.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,20 +14,45 @@ namespace DatingApp.API.Repositries
 		private readonly DatingAppDataContext _context;
 		private readonly IMapper _mapper;
 
-		public UserRepository(DatingAppDataContext context,IMapper mapper)
+		public UserRepository(DatingAppDataContext context, IMapper mapper)
 		{
 			this._context = context;
 			this._mapper = mapper;
 		}
 
-		public async Task<MemberDto> GetMemberByUsernameAsync(string username)
+		public async Task<MemberDto> GetMemberAsync(string username)
 		{
-			return await _context.Users.Where(x => x.UserName == username).ProjectTo<MemberDto>(_mapper.ConfigurationProvider).SingleOrDefaultAsync();
+			return await _context.Users
+				.Where(x => x.UserName == username)
+				.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+				.SingleOrDefaultAsync();
 		}
 
-		public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+		public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
 		{
-			return await _context.Users.ProjectTo<MemberDto>(_mapper.ConfigurationProvider).ToListAsync();
+			var query = _context.Users.AsQueryable();
+			query = query.Where(w => w.UserName != userParams.CurrentUserName);
+			query = query.Where(w => w.Gender == userParams.Gender);
+
+			var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+			var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+			query = query.Where(w => w.DateOfBirth >= minDob && w.DateOfBirth <= maxDob);
+
+			query = userParams.OrderBy switch
+			{
+				"created" => query.OrderByDescending(o => o.Created),
+				_ => query.OrderByDescending(o => o.LastActive)
+			};
+
+			return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
+
+
+
+			//var query = _context.Users
+			//	.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+			//	// 讓ef對此次查詢結果不追蹤，提高查詢的性能，節省記憶體
+			//	.AsNoTracking();
+			//return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
 		}
 
 		public async Task<AppUser> GetUserByIdAsync(int id)
@@ -46,10 +72,11 @@ namespace DatingApp.API.Repositries
 		public async Task<IEnumerable<AppUser>> GetUsersAsync()
 		{
 			return await _context.Users
-				.Include(p => p.Photos).ToListAsync();
+				.Include(p => p.Photos)
+				.ToListAsync();
 		}
 
-		public async Task<bool> SavaAllAsync()
+		public async Task<bool> SaveAllAsync()
 		{
 			return await _context.SaveChangesAsync() > 0;
 		}
