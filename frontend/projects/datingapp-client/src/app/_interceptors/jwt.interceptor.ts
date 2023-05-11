@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
 import {
-    HttpRequest,
-    HttpHandler,
     HttpEvent,
-    HttpInterceptor
+    HttpHandler,
+    HttpInterceptor,
+    HttpRequest
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, take } from 'rxjs';
 import { AccountService } from '../_services/account.service';
 

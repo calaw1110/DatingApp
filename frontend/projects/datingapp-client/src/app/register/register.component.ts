@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { AccountService } from '../_services/account.service';
-import { ToastrService } from 'ngx-toastr';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { AccountService } from '../_services/account.service';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',

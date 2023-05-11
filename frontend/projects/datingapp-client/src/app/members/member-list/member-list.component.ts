@@ -1,12 +1,9 @@
-import { UserParams } from './../../_models/userParam';
 import { Component, OnInit } from '@angular/core';
-import { MembersService } from '../../_services/members.service';
-import { Member } from '../../_models/member';
-import { take } from 'rxjs';
-import { Pagination } from '../../_models/Pagination';
 import { PageChangedEvent } from 'ngx-bootstrap/pagination';
-import { AccountService } from '../../_services/account.service';
-import { User } from '../../_models/user';
+import { Pagination } from '../../_models/Pagination';
+import { Member } from '../../_models/member';
+import { MembersService } from '../../_services/members.service';
+import { UserParams } from './../../_models/userParam';
 
 @Component({
     selector: 'app-member-list',

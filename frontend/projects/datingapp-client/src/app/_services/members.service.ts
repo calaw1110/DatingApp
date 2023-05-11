@@ -1,12 +1,12 @@
-import { UserParams } from './../_models/userParam';
-import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Member } from '../_models/member';
+import { Injectable } from '@angular/core';
 import { map, of, take } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { PaginatedResult } from '../_models/Pagination';
-import { AccountService } from './account.service';
+import { Member } from '../_models/member';
 import { User } from '../_models/user';
+import { UserParams } from './../_models/userParam';
+import { AccountService } from './account.service';
 
 @Injectable({
     providedIn: 'root'

@@ -1,13 +1,12 @@
-import { Photo } from './../../_models/photo';
-import { take } from 'rxjs';
 import { Component, Input, OnInit } from '@angular/core';
-import { Member } from '../../_models/member';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from 'projects/datingapp-client/src/environments/environment';
+import { take } from 'rxjs';
+import { Member } from '../../_models/member';
 import { User } from '../../_models/user';
 import { AccountService } from '../../_services/account.service';
 import { MembersService } from '../../_services/members.service';
-import { NotExpr } from '@angular/compiler';
+import { Photo } from './../../_models/photo';
 
 @Component({
     selector: 'app-photo-editor',
