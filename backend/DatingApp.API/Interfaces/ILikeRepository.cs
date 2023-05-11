@@ -10,5 +10,6 @@ namespace DatingApp.API.Interfaces
 		Task<AppUser> GetUserWithLikes(int userId);
 
 		Task<PagedList<LikeDto>> GetUserLikes(LikeParams likeParams);
+		//Task<LikeDto> RemoveLikes(int sourceUserId, int wannaRemoveLikeUserId);
 	}
 }

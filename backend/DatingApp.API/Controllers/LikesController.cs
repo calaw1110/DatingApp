@@ -65,5 +65,20 @@ namespace DatingApp.API.Controllers
 			return Ok(users);
 		}
 
+		//[HttpDelete]
+		//public async Task<ActionResult> RemoveLike(string username)
+		//{
+		//	var sourceUserId = User.GetUserId();
+		//	var sourceUser = await _likeRepository.GetUserWithLikes(sourceUserId);
+
+		//	var removeLikeUserId = await _userRepository.GetUserByUsernameAsync(username);
+
+		//	if(removeLikeUserId == null) return NotFound();
+
+		//	if (sourceUser.UserName == username) return BadRequest("You caanot like yourself");
+
+
+		//}
+
 	}
 }

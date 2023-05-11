@@ -60,5 +60,13 @@ namespace DatingApp.API.Repositries
 					.Include(x => x.LikedUsers)
 					.FirstOrDefaultAsync(x => x.Id == userId);
 		}
+
+		//public async Task<LikeDto> RemoveLikes(int userId, int wannaRemoveLikeUserId)
+		//{
+		//	var remove = _context.Likes.Where(w => w.SourceUserId == userId && w.TargetUserId == wannaRemoveLikeUserId);
+		//	_context.Remove(remove);
+		//	_context.SaveChanges();
+		//	return _context.Likes.AsNoTracking().ToListAsync();
+		//}
 	}
 }
