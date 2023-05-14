@@ -3,12 +3,13 @@ using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
 using DatingApp.API.Extensions;
 using DatingApp.API.Helper;
+using DatingApp.API.Helper.Params;
 using DatingApp.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Repositries
 {
-	public class LikesRepository : ILikeRepository
+    public class LikesRepository : ILikeRepository
 	{
 		private readonly DatingAppDataContext _context;
 

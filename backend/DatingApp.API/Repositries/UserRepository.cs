@@ -4,12 +4,13 @@ using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
 using DatingApp.API.Helper;
+using DatingApp.API.Helper.Params;
 using DatingApp.API.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Repositries
 {
-	public class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
 	{
 		private readonly DatingAppDataContext _context;
 		private readonly IMapper _mapper;

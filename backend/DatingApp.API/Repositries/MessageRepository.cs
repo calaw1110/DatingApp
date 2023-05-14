@@ -5,16 +5,21 @@ using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
 using DatingApp.API.Helper;
 using DatingApp.API.Interfaces;
+using AutoMapper;
+using DatingApp.API.Helper.Params;
+using AutoMapper.QueryableExtensions;
 
 namespace DatingApp.API.Repositries
 {
 	public class MessageRepository : IMessageRepository
 	{
 		private readonly DatingAppDataContext _context;
+		private readonly IMapper _mapper;
 
-		public MessageRepository(DatingAppDataContext context)
+		public MessageRepository(DatingAppDataContext context, IMapper mapper)
 		{
 			this._context = context;
+			this._mapper = mapper;
 		}
 		public void AddMessage(Message message)
 		{
@@ -31,10 +36,28 @@ namespace DatingApp.API.Repositries
 			return await _context.Messages.FindAsync(id);
 		}
 
-		public Task<PagedList<MessageDto>> GetMessagesForUser()
+		public async Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams)
 		{
+			var query = _context.Messages
+				.OrderByDescending(x => x.MessageSent)
+				.AsQueryable();
 
-			throw new NotImplementedException();
+			query = messageParams.Container switch
+			{
+				// 訊息收件夾
+				"Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username),
+
+				// 訊息寄件夾
+				"Outbox" => query.Where(u => u.SenderUsername == messageParams.Username),
+
+				// 未讀訊息
+				_ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null),
+			};
+
+			var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
+
+			// 依分頁查詢參數回傳結果
+			return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
 		}
 
 		public Task<IEnumerable<MessageDto>> GetMessagesThred(int currentUserId, int recipoentId)

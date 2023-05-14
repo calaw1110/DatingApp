@@ -1,6 +1,7 @@
 ﻿using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
 using DatingApp.API.Helper;
+using DatingApp.API.Helper.Params;
 
 namespace DatingApp.API.Interfaces
 {
@@ -20,7 +21,7 @@ namespace DatingApp.API.Interfaces
 
 		Task<Message> GetMessage(int id);
 
-		Task<PagedList<MessageDto>> GetMessagesForUser();
+		Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams);
 
 		Task<IEnumerable<MessageDto>> GetMessagesThred(int currentUserId, int recipoentId);
 

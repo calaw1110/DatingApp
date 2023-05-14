@@ -1,10 +1,11 @@
 ﻿using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
 using DatingApp.API.Helper;
+using DatingApp.API.Helper.Params;
 
 namespace DatingApp.API.Interfaces
 {
-	public interface IUserRepository
+    public interface IUserRepository
 	{
 		void Update(AppUser user);
 
