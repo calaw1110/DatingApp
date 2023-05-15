@@ -23,7 +23,7 @@ namespace DatingApp.API.Interfaces
 
 		Task<PagedList<MessageDto>> GetMessagesForUser(MessageParams messageParams);
 
-		Task<IEnumerable<MessageDto>> GetMessagesThred(int currentUserId, int recipoentId);
+		Task<IEnumerable<MessageDto>> GetMessagesThread(string currentUsername, string recipoentUsername);
 
 		Task<bool> SaveAllAsync();
 	}

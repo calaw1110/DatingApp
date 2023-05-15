@@ -45,13 +45,17 @@ namespace DatingApp.API.Repositries
 			query = messageParams.Container switch
 			{
 				// 訊息收件夾
-				"Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username),
+				"Inbox" => query.Where(u => u.RecipientUsername == messageParams.Username
+										&& u.RecipientDeleted == false),
 
 				// 訊息寄件夾
-				"Outbox" => query.Where(u => u.SenderUsername == messageParams.Username),
+				"Outbox" => query.Where(u => u.SenderUsername == messageParams.Username
+										&& u.SenderDeleted == false),
 
 				// 未讀訊息
-				_ => query.Where(u => u.RecipientUsername == messageParams.Username && u.DateRead == null),
+				_ => query.Where(u => u.RecipientUsername == messageParams.Username
+								&& u.RecipientDeleted == false
+								&& u.DateRead == null),
 			};
 
 			var messages = query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider);
@@ -60,9 +64,37 @@ namespace DatingApp.API.Repositries
 			return await PagedList<MessageDto>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
 		}
 
-		public Task<IEnumerable<MessageDto>> GetMessagesThred(int currentUserId, int recipoentId)
+		public async Task<IEnumerable<MessageDto>> GetMessagesThread(string currentUsername, string recipientUsername)
 		{
-			throw new NotImplementedException();
+			var messages = await _context.Messages
+				// 發送者的頭像照片信息
+				.Include(u => u.Sender).ThenInclude(p => p.Photos)
+				// 接收者的頭像照片信息
+				.Include(u => u.Recipient).ThenInclude(p => p.Photos)
+				.Where(
+					// 條件：接收者用戶名等於 currentUsername 且發送者用戶名等於 recipientUsername
+					m => m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername && m.RecipientDeleted == false
+					||
+					// 或者條件：接收者用戶名等於 recipientUsername 且發送者用戶名等於 currentUsername
+					m.RecipientUsername == recipientUsername && m.SenderUsername == currentUsername && m.SenderDeleted == false
+				)
+				.OrderByDescending(m => m.MessageSent)
+				.ToListAsync();
+
+			var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
+
+			// 如果有未讀消息，標記它們為已讀並保存到資料庫
+			if (unreadMessages.Any())
+			{
+				foreach (var message in unreadMessages)
+				{
+					message.DateRead = DateTime.UtcNow;
+				}
+				await _context.SaveChangesAsync();
+			}
+
+			// Map to MessageDto 
+			return _mapper.Map<IEnumerable<MessageDto>>(messages);
 		}
 
 		public async Task<bool> SaveAllAsync()
