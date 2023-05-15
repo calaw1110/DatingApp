@@ -1,13 +1,13 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map, of, take } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { PaginatedResult } from '../_models/Pagination';
 import { Member } from '../_models/member';
 import { User } from '../_models/user';
 import { Like } from './../_models/like';
 import { UserParams } from './../_models/userParam';
 import { AccountService } from './account.service';
+import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 @Injectable({
     providedIn: 'root'
@@ -21,9 +21,6 @@ export class MembersService {
 
     /** 會員資料的快取 */
     memberCache = new Map();
-
-    /** like list cache */
-    likeListCache = new Map();
 
     /** 使用者資料 */
     user: User | undefined;
@@ -88,14 +85,14 @@ export class MembersService {
         // 無會員快取資料執行以下
 
         // 建立會員查詢參數
-        let params = this.getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
+        let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
         params = params.append('minAge', userParams.minAge);
         params = params.append('maxAge', userParams.maxAge);
         params = params.append('gender', userParams.gender);
         params = params.append('orderBy', userParams.orderBy);
 
 
-        return this.getPaginatedResult<Member[]>(this.baseUrl + 'users', params).pipe(
+        return getPaginatedResult<Member[]>(this.baseUrl + 'users', params, this.http).pipe(
             map(response => {
                 this.memberCache.set(Object.values(userParams).join('-'), response);
                 return response;
@@ -177,59 +174,13 @@ export class MembersService {
         // like list 查詢參數
         const userLikeListParams = { 'predicate': predicate, 'pageNumber': pageNumber, 'pageSize': pageSize };
 
-        // 嘗試取得like list快取資料 
-        const response = this.likeListCache.get(Object.values(userLikeListParams).join('-'));
-
-        // 若有快取資料，將其轉換成 Observable 物件並返回
-        if (response) return of(response);
-
-
-        let params = this.getPaginationHeaders(userLikeListParams.pageNumber, userLikeListParams.pageSize);
+        let params = getPaginationHeaders(userLikeListParams.pageNumber, userLikeListParams.pageSize);
         params = params.append('predicate', userLikeListParams.predicate);
 
-        return this.getPaginatedResult<Like[]>(this.baseUrl + 'likes', params).pipe(
+        return getPaginatedResult<Like[]>(this.baseUrl + 'likes', params, this.http).pipe(
             map(response => {
-                this.likeListCache.set(Object.values(userLikeListParams).join('-'), response);
                 return response;
             })
         );
     }
-
-    /**
-     * 取得分頁結果
-     * @param {string} url - 要執行 HTTP GET 請求的 URL
-     * @param {HttpParams} params - HTTP 請求的參數
-     * @returns {Observable<PaginatedResult<T>>} 分頁結果的可觀察物件
-     */
-    private getPaginatedResult<T>(url: string, params: HttpParams): Observable<PaginatedResult<T>> {
-        const paginatedResult: PaginatedResult<T> = new PaginatedResult<T>();
-        return this.http.get<T>(url, { observe: 'response', params }).pipe(
-            map(response => {
-                if (response.body) {
-                    // 從 response.body 中取得查詢結果
-                    paginatedResult.result = response.body;
-                }
-                const pagination = response.headers.get('Pagination');
-                if (pagination) {
-                    // 從 response.headers 中取得分頁資訊並解析為物件
-                    paginatedResult.pagination = JSON.parse(pagination);
-                }
-                return paginatedResult;
-            })
-        );
-    }
-
-    /**
-     * 取得分頁標頭
-     * @param {number} pageNumber - 目標頁碼
-     * @param {number} pageSize -  顯示比數
-     * @returns {HttpParams} HTTP 請求的參數，包含分頁相關資訊
-     */
-    private getPaginationHeaders(pageNumber: number, pageSize: number): HttpParams {
-        let params = new HttpParams();
-        params = params.append('pageNumber', pageNumber.toString());
-        params = params.append('pageSize', pageSize.toString());
-        return params;
-    }
-
 }
