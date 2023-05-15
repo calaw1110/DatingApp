@@ -5,17 +5,19 @@ using DatingApp.API.Extensions;
 using DatingApp.API.Helper;
 using DatingApp.API.Helper.Params;
 using DatingApp.API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
-	public class MessageController : BaseApiController
+	[Authorize]
+	public class MessagesController : BaseApiController
 	{
 		private readonly IUserRepository _userRepository;
 		private readonly IMessageRepository _messageRepository;
 		private readonly IMapper _mapper;
 
-		public MessageController(IUserRepository userRepository, IMessageRepository messageRepository, IMapper mapper)
+		public MessagesController(IUserRepository userRepository, IMessageRepository messageRepository, IMapper mapper)
 		{
 			this._userRepository = userRepository;
 			this._messageRepository = messageRepository;
@@ -60,6 +62,37 @@ namespace DatingApp.API.Controllers
 			Response.AddPaginationHeader(new PaginationHeader(messages.CurrentPage, messages.PageSize, messages.TotalCount, messages.TotalPages));
 
 			return messages;
+		}
+
+		[HttpGet("thread/{username}")]
+		public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
+		{
+			var currentUsername = User.GetUsername();
+
+			return Ok(await _messageRepository.GetMessagesThread(username, currentUsername));
+		}
+
+		[HttpDelete("{id}")]
+		public async Task<ActionResult> DeleteMessage(int id)
+		{
+			var username = User.GetUsername();
+
+			var message = await _messageRepository.GetMessage(id);
+
+			if (message.SenderUsername != username && message.RecipientUsername != username)
+				return Unauthorized();
+
+			if (message.SenderUsername == username) message.SenderDeleted = true;
+
+			if (message.RecipientUsername == username) message.RecipientDeleted = true;
+
+			if (message.SenderDeleted && message.RecipientDeleted)
+				_messageRepository.DeleteMessage(message);
+
+			if (await _messageRepository.SaveAllAsync())
+				return Ok();
+
+			return BadRequest("Problem deleting the message");
 		}
 	}
 }
