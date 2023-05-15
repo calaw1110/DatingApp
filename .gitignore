@@ -1,2 +1,3 @@
 .vscode/
 /backend/DatingApp.API/appsettings.json
+backend/DatingApp.API/appsettings.Development.json
