@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './_guards/auth.guard';
 import { PreventUnsavedChangedsGuard } from './_guards/prevent-unsaved-changeds.guard';
+import { MemberDetailedResolver } from './_resolve/member-detailed.resolver';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
 import { TestErrorComponent } from './errors/test-error/test-error.component';
@@ -20,7 +21,9 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             { path: 'members', component: MemberListComponent },
-            { path: 'members/:username', component: MemberDetailComponent },
+            // 進入/members/:username時，會先觸發resovle 提前取得 member 資料 ，由 MemberDetailComponent 從 route.data[key] 取得資料
+            // resolve: { member: MemberDetailedResolver } member 為 自定義存放進route.data裡的key
+            { path: 'members/:username', component: MemberDetailComponent, resolve: { member: MemberDetailedResolver } },
             { path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangedsGuard] },
             { path: 'lists', component: ListsComponent },
             { path: 'messages', component: MessagesComponent },
