@@ -29,7 +29,7 @@ export class ListsComponent implements OnInit {
         })
     }
 
-    pageChaged(event: any) {
+    pageChanged(event: any) {
         if (this.pageNumber !== event.page) {
             this.pageNumber = event.page;
             this.loadLikes()

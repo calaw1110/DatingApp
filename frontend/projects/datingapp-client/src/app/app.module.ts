@@ -20,6 +20,7 @@ import { MemberCardComponent } from './members/member-card/member-card.component
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { MessagesComponent } from './messages/messages.component';
 import { NavComponent } from './nav/nav.component';
@@ -42,6 +43,7 @@ import { RegisterComponent } from './register/register.component';
         PhotoEditorComponent,
         TextInputComponent,
         DatePickerComponent,
+        MemberMessagesComponent,
     ],
     imports: [
         BrowserModule,

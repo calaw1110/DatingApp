@@ -1,6 +1,4 @@
-/**
- * 使用者介面
- */
+/** 使用者介面 */
 export interface User {
     /** 使用者名稱 */
     username: string;

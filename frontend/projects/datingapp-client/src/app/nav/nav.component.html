@@ -4,7 +4,9 @@
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <ng-container *ngIf="accountService.currentUser$ | async">
                 <li class="nav-item">
-                    <a class="nav-link" routerLink="/members" routerLinkActive="active">Matchs</a>
+                    <!-- [routerLinkActiveOptions]="{exact:true}" 為完全匹配 /members 才會加上active 這個class-->
+                    <a class="nav-link" routerLink="/members" [routerLinkActiveOptions]="{exact:true}"
+                        routerLinkActive="active">Matchs</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" routerLink="/lists" routerLinkActive="active">Lists</a>
@@ -19,7 +21,7 @@
         </ul>
 
         <div class="dropdown" *ngIf="(accountService.currentUser$ | async) as user" dropdown>
-            <img src="{{user.photoUrl || '../../../assets/user.png'}}" alt="user photo">
+            <img src="{{user.photoUrl || './assets/user.png'}}" alt="user photo">
             <button id="button-basic" dropdownToggle type="button"
                 class="btn btn-link text-light text-decoration-none dropdown-toggle "
                 aria-controls="dropdown-basic">Welcome {{ user.knownAs }} <span class="caret"></span></button>

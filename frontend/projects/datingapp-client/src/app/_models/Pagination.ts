@@ -1,6 +1,4 @@
-/**
- * 分頁資訊介面
- */
+/** 分頁資訊介面 */
 export interface Pagination {
 
     /** 目前頁面 */

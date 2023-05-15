@@ -1,6 +1,4 @@
-/**
- * 照片介面
- */
+/** 照片介面 */
 export interface Photo {
     /** 照片ID */
     id: number;

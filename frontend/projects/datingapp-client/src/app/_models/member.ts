@@ -1,8 +1,6 @@
 import { Photo } from "./photo";
 
-/**
- * 會員介面
- */
+/** 會員介面 */
 export interface Member {
 
     /** 會員ID */

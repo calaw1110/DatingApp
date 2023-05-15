@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
+import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { Member } from '../../_models/member';
-import { MembersService } from '../../_services/members.service';
+import { Message } from '../../_models/message';
+import { MessageService } from './../../_services/message.service';
 
 @Component({
     selector: 'app-member-detail',
@@ -10,12 +12,29 @@ import { MembersService } from '../../_services/members.service';
     styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
-    member: Member | undefined;
+
+    @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
+    activeTab?: TabDirective;
+    member!: Member;
     galleryOptions: NgxGalleryOptions[] = [];
     galleryImages: NgxGalleryImage[] = [];
-    constructor(private memberService: MembersService, private route: ActivatedRoute) { }
+    messages: Message[] = [];
+    constructor(private route: ActivatedRoute, private messageService: MessageService) { }
+
     ngOnInit(): void {
-        this.loadMember();
+        this.route.data.subscribe({
+            next: data => {
+                console.log("this.route.data", data);
+                this.member = data['member']
+            }
+        })
+        this.route.queryParams.subscribe({
+            next: params => {
+                console.log('this.route.queryParams', params);
+                params['tab'] && this.selectTab(params['tab']);
+            }
+        })
+
         this.galleryOptions = [
             {
                 width: '500px',
@@ -26,32 +45,58 @@ export class MemberDetailComponent implements OnInit {
                 preview: false
             }
         ];
-
+        this.galleryImages = this.getImages();
     }
 
+    /**
+     * 取得會員圖片
+     * @return {any[]} 會員圖片資訊陣列
+     */
     getImages() {
         if (!this.member) return [];
         const imageUrls = [];
         for (const photo of this.member.photos) {
+            // ngx-gallery照片連結設定
             imageUrls.push({
                 small: photo.url,
                 medium: photo.url,
                 big: photo.url
             })
-            console.log(imageUrls);
+            console.log("imageUrls", imageUrls);
         }
         return imageUrls;
     }
 
+    /**
+     * 切換活頁籤tab
+     * @param {string} heading
+     */
+    selectTab(heading: string) {
+        console.log('selectTab');
+        if (this.memberTabs)
+            this.memberTabs.tabs.find(x => x.heading === heading)!.active = true;
+    }
 
-    loadMember() {
-        const username = this.route.snapshot.paramMap.get('username');
-        if (!username) return;
-        this.memberService.getMember(username).subscribe({
-            next: member => {
-                this.member = member;
-                this.galleryImages = this.getImages();
-            }
-        })
+    /**
+     * 取得登入者對特定會員的對話資訊
+     */
+    loadMessages() {
+        console.log('loadMessages');
+        if (this.member) {
+            this.messageService.getMessageThread(this.member.userName).subscribe({
+                next: messages => this.messages = messages
+            })
+        }
+    }
+    /**
+     * 活頁籤監聽事件-切換到Messages觸發loadMessages()
+     * @param {TabDirective} data
+     */
+    onTabActivated(data: TabDirective) {
+        console.log('onTabActivated');
+        this.activeTab = data;
+        if (this.activeTab.heading === 'Messages') {
+            this.loadMessages();
+        }
     }
 }
