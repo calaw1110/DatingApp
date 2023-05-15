@@ -2,13 +2,14 @@
 using DatingApp.API.Entities;
 using DatingApp.API.Extensions;
 using DatingApp.API.Helper;
+using DatingApp.API.Helper.Params;
 using DatingApp.API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
-	// /api/Likes/...
-	public class LikesController : BaseApiController
+    // /api/Likes/...
+    public class LikesController : BaseApiController
 	{
 		private readonly IUserRepository _userRepository;
 		private readonly ILikeRepository _likeRepository;
