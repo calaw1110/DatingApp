@@ -50,6 +50,9 @@ export class AccountService {
      * @param {User} user - 要設定的使用者
      */
     setCurrentUser(user: User): void {
+        user.roles = [];
+        const roles = this.getDecodedToken(user.token).role;
+        Array.isArray(roles) ? user.roles = roles : user.roles.push(roles);
         // 將 JWT 儲存在 localstorage
         localStorage.setItem('user', JSON.stringify(user));
         this.currentUserSource.next(user);
@@ -62,5 +65,9 @@ export class AccountService {
         // 將 localstorage 的 JWT 移除
         localStorage.removeItem('user');
         this.currentUserSource.next(null);
+    }
+
+    getDecodedToken(token: string) {
+        return JSON.parse(window.atob(token.split('.')[1]))
     }
 }
