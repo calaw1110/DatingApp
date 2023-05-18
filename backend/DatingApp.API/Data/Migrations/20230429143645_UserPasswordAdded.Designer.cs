@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatingApp.API.Data.Migrations
 {
-    [DbContext(typeof(DatingAppDataContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20230429143645_UserPasswordAdded")]
     partial class UserPasswordAdded
     {

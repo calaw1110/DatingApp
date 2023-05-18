@@ -11,9 +11,9 @@ namespace DatingApp.API.Repositries
 {
     public class LikesRepository : ILikeRepository
 	{
-		private readonly DatingAppDataContext _context;
+		private readonly DataContext _context;
 
-		public LikesRepository(DatingAppDataContext context)
+		public LikesRepository(DataContext context)
 		{
 			this._context = context;
 		}

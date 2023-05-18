@@ -9,9 +9,9 @@ namespace DatingApp.API.Controllers
 
 	public class BuggyController : BaseApiController
 	{
-		private readonly DatingAppDataContext _context;
+		private readonly DataContext _context;
 
-		public BuggyController(DatingAppDataContext context)
+		public BuggyController(DataContext context)
 		{
 			this._context = context;
 		}

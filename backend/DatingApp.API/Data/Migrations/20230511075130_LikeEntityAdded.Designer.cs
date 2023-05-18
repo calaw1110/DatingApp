@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatingApp.API.Data.Migrations
 {
-    [DbContext(typeof(DatingAppDataContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20230511075130_LikeEntityAdded")]
     partial class LikeEntityAdded
     {
