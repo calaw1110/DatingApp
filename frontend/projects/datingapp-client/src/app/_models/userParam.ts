@@ -29,7 +29,7 @@ export class UserParams implements IUserParams {
     pageNumber = 1;
 
     /** 每頁顯示的項目數量 */
-    pageSize = 3;
+    pageSize = 5;
 
     /** 性別 */
     gender = "";
