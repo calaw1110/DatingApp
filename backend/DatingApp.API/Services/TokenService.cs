@@ -1,5 +1,6 @@
 ﻿using DatingApp.API.Entities;
 using DatingApp.API.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,19 +12,21 @@ namespace DatingApp.API.Services
 	public class TokenService : ITokenService
 	{
 		private readonly SymmetricSecurityKey _key;
+		private readonly UserManager<AppUser> _userManager;
 
-		public TokenService(IConfiguration config)
+		public TokenService(IConfiguration config, UserManager<AppUser> userManager)
 		{
 			// 從appsetting中取得 TokenKey 值並將其轉換為 UTF-8 編碼的 byte 陣列
 			// 建立一個加密金鑰 用於 JWT
 			_key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
+			this._userManager = userManager;
 		}
 		/// <summary>
 		/// 建立 帳號登入 token
 		/// </summary>
 		/// <param name="user">通過驗證使用者</param>
 		/// <returns></returns>
-		public string CreateToken(AppUser user)
+		public async Task<string> CreateToken(AppUser user)
 		{
 
 			// 建立一個宣告（Claim）的List
@@ -39,6 +42,11 @@ namespace DatingApp.API.Services
 
 				new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
 			};
+
+
+			var roles =await _userManager.GetRolesAsync(user);
+
+			claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
 			// 建立一個簽署憑證（SigningCredentials）
 			// 使用 _key 作為金鑰（_key 是一個 SecurityKey 物件），使用 HmacSha512Signature 簽署算法

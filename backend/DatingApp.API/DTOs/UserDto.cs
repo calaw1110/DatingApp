@@ -1,4 +1,6 @@
-﻿namespace DatingApp.API.DTOs
+﻿using DatingApp.API.Entities;
+
+namespace DatingApp.API.DTOs
 {
 	public class UserDto
 	{

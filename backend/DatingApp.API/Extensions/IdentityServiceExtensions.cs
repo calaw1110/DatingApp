@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using DatingApp.API.Data;
+using DatingApp.API.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -17,17 +20,48 @@ namespace DatingApp.API.Extensions
 		/// <returns>修改後的服務集合。</returns>
 		public static IServiceCollection AddIdentityService(this IServiceCollection services, IConfiguration config)
 		{
-			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-			.AddJwtBearer(options =>
+
+			services.AddIdentityCore<AppUser>(option =>
 			{
-				options.TokenValidationParameters = new TokenValidationParameters
+				option.Password.RequireNonAlphanumeric = false;
+				option.Password.RequiredLength = 4;
+				option.Password.RequireLowercase = false;
+				option.Password.RequireUppercase = false;
+				option.Password.RequireDigit = false;
+
+			})
+			.AddRoles<AppRole>()
+			.AddRoleManager<RoleManager<AppRole>>()
+			.AddEntityFrameworkStores<DatingAppDataContext>();
+
+
+
+
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				.AddJwtBearer(options =>
 				{
-					ValidateIssuerSigningKey = true,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
-					ValidateIssuer = false,
-					ValidateAudience = false
-				};
+					options.TokenValidationParameters = new TokenValidationParameters
+					{
+						ValidateIssuerSigningKey = true,
+						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
+						ValidateIssuer = false,
+						ValidateAudience = false
+					};
+				});
+
+			// 加入自定義的授權政策
+			services.AddAuthorization(options =>
+			{
+				// [Authorize(Policy = "RequireAdminRole")]
+				// endpoint 有此屬性時，呼叫的使用者角色需有 Admin 
+				options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+
+				// [Authorize(Policy = "ModeratePhotoRole")]
+				// endpoint 有此屬性時，呼叫的使用者角色需有 Admin 或 Moderator
+				options.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
 			});
+
+
 			return services;
 		}
 	}
