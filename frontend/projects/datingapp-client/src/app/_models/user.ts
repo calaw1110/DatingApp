@@ -1,5 +1,5 @@
 /** 使用者介面 */
-export interface User {
+export interface IUser {
     /** 使用者名稱 */
     username: string;
     /** 身份驗證令牌 */
@@ -10,5 +10,14 @@ export interface User {
     knownAs: string;
     /** 性別 */
     gender: string;
-  }
-  
+    /** 身分 */
+    roles: string[];
+}
+export class User implements IUser {
+    username: string = "";
+    token: string = "";
+    photoUrl: string = "";
+    knownAs: string = "";
+    gender: string = "";
+    roles: string[] = [];
+}
