@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DatingApp.API.Controllers
 {
 
-    [Authorize]
+	[Authorize]
 	public class UsersController : BaseApiController
 	{
 		private readonly IUserRepository _userRepository;
@@ -26,6 +26,7 @@ namespace DatingApp.API.Controllers
 		}
 
 		// [FromQuery] ノ眖 HTTP 叫―琩高才﹃ URL い? 场だい竕﹚把计
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
 		public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
 		{
@@ -46,11 +47,12 @@ namespace DatingApp.API.Controllers
 			return Ok(users);
 		}
 
+		[Authorize(Roles = "Member")]
 		[HttpGet("{username}")]
-		public async Task<ActionResult<MemberDto>> GetUserByName(string username)
+		public async Task<ActionResult<MemberDto>> GetUser(string username)
 		{
-			var user = await _userRepository.GetMemberAsync(username);
-			return Ok(user);
+			return await _userRepository.GetMemberAsync(username);
+			 
 		}
 
 		[HttpPut]

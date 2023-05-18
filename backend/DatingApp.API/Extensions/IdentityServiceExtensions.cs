@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using DatingApp.API.Data;
+using DatingApp.API.Entities;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -17,6 +20,23 @@ namespace DatingApp.API.Extensions
 		/// <returns>修改後的服務集合。</returns>
 		public static IServiceCollection AddIdentityService(this IServiceCollection services, IConfiguration config)
 		{
+
+			services.AddIdentityCore<AppUser>(option =>
+			{
+				option.Password.RequireNonAlphanumeric = false;
+				option.Password.RequiredLength = 4;
+				option.Password.RequireLowercase = false;
+				option.Password.RequireUppercase = false;
+				option.Password.RequireDigit = false;
+
+			})
+			.AddRoles<AppRole>()
+			.AddRoleManager<RoleManager<AppRole>>()
+			.AddEntityFrameworkStores<DatingAppDataContext>();
+
+
+
+
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			.AddJwtBearer(options =>
 			{
