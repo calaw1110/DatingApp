@@ -89,6 +89,7 @@ using var scope = app.Services.CreateScope();
 var services =scope.ServiceProvider;
 try
 {
+	// 自動建立 使用者測試資料
 	var context = services.GetRequiredService<DatingAppDataContext>();
 	var userManager = services.GetRequiredService<UserManager<AppUser>>();
 	var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
