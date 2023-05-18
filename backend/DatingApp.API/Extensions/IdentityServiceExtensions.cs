@@ -32,7 +32,7 @@ namespace DatingApp.API.Extensions
 			})
 			.AddRoles<AppRole>()
 			.AddRoleManager<RoleManager<AppRole>>()
-			.AddEntityFrameworkStores<DatingAppDataContext>();
+			.AddEntityFrameworkStores<DataContext>();
 
 
 
@@ -46,6 +46,22 @@ namespace DatingApp.API.Extensions
 						IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"])),
 						ValidateIssuer = false,
 						ValidateAudience = false
+					};
+
+					options.Events = new JwtBearerEvents()
+					{
+						OnMessageReceived = context =>
+						{
+							// Client端 SignalR 傳送資訊時所使用的Token
+							var accessToken = context.Request.Query["access_token"];
+
+							var path = context.HttpContext.Request.Path;
+							if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hubs"))
+							{
+								context.Token = accessToken;
+							}
+							return Task.CompletedTask;
+						}
 					};
 				});
 

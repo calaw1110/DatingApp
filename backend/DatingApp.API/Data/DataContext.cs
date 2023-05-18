@@ -6,15 +6,18 @@ using Microsoft.EntityFrameworkCore;
 namespace DatingApp.API.Data
 {
 	// 指定 Identity相關table pk 使用 int
-	public class DatingAppDataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUserClaim<int>,
+	public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUserClaim<int>,
 		AppUserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 	{
-		public DatingAppDataContext(DbContextOptions options) : base(options)
+		public DataContext(DbContextOptions options) : base(options)
 		{
 		}
 
 		public DbSet<UserLike> Likes { get; set; }
 		public DbSet<Message> Messages { get; set; }
+		public DbSet<Group> Groups { get; set; }
+
+		public DbSet<Connection> Connections { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

@@ -12,10 +12,10 @@ namespace DatingApp.API.Repositries
 {
     public class UserRepository : IUserRepository
 	{
-		private readonly DatingAppDataContext _context;
+		private readonly DataContext _context;
 		private readonly IMapper _mapper;
 
-		public UserRepository(DatingAppDataContext context, IMapper mapper)
+		public UserRepository(DataContext context, IMapper mapper)
 		{
 			this._context = context;
 			this._mapper = mapper;

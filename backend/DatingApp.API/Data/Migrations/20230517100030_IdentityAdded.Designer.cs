@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DatingApp.API.Data.Migrations
 {
-    [DbContext(typeof(DatingAppDataContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20230517100030_IdentityAdded")]
     partial class IdentityAdded
     {

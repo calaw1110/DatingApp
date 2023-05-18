@@ -3,6 +3,7 @@ using DatingApp.API.Helper;
 using DatingApp.API.Interfaces;
 using DatingApp.API.Repositries;
 using DatingApp.API.Services;
+using DatingApp.API.SignalR;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Extensions
@@ -12,7 +13,7 @@ namespace DatingApp.API.Extensions
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
 		{
 			// 加入資料庫連線設定
-			services.AddDbContext<DatingAppDataContext>(option =>
+			services.AddDbContext<DataContext>(option =>
 			{
 				option.UseSqlite(config.GetConnectionString("DefaultConnection"));
 			});
@@ -21,11 +22,14 @@ namespace DatingApp.API.Extensions
 
 			services.AddCors();
 
-			// 加入自訂Service
 
-			services.AddScoped<ITokenService, TokenService>();
 			// 加入Cloudinary
 			services.Configure<CloudinaryHelper>(config.GetSection("CloudinarySettings"));
+
+			#region Scoped - 同一個 Request 中，都是同樣的實例
+
+			// 加入自訂Service
+			services.AddScoped<ITokenService, TokenService>();
 			services.AddScoped<IPhotoService, PhotoService>();
 
 			// 加入 Repository
@@ -33,13 +37,19 @@ namespace DatingApp.API.Extensions
 			services.AddScoped<ILikeRepository, LikesRepository>();
 			services.AddScoped<IMessageRepository, MessageRepository>();
 
+			// 加入 使用者活動時間紀錄
+			services.AddScoped<LogUserActivityHelper>();
+
+			#endregion
+
 			// 加入 automapper
 			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
-			// 加入 使用者活動時間紀錄
-			services.AddScoped<LogUserActivityHelper>();
-
+			// 加入 SignalR 服務
+			services.AddSignalR();
+			// Singleton - 應用程式 執行時期 只有一個實體
+			services.AddSingleton<PresenceTracker>();
 			return services;
 		}
 	}
