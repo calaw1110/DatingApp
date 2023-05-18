@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { BehaviorSubject, take } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { Group } from '../_models/Group';
 import { Message } from '../_models/message';
+import { User } from '../_models/user';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 @Injectable({
@@ -10,9 +14,63 @@ import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 export class MessageService {
     /** API網址 */
     baseUrl = environment.apiUrl;
-
+    hubUrl = environment.hubUrl;
+    private hubConnection?: HubConnection;
+    private messageThreadSource = new BehaviorSubject<Message[]>([]);
+    messageThread$ = this.messageThreadSource.asObservable();
     /** 建構式 */
     constructor(private http: HttpClient) { }
+
+    createHubConnection(user: User, otherUsername: string) {
+        this.hubConnection = new HubConnectionBuilder()
+            .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
+                accessTokenFactory: () => user.token
+            })
+            .withAutomaticReconnect()
+            .build()
+
+        this.hubConnection.start()
+            .catch(
+                error => console.error(error)
+            );
+
+        this.hubConnection.on('ReceiveMessageThread', message => {
+            this.messageThreadSource.next(message);
+        });
+
+        this.hubConnection.on('UpdatedGroup', (group: Group) => {
+            if (group.connections.some(x => x.username === otherUsername)) {
+                this.messageThread$.pipe(take(1)).subscribe({
+                    next: messages => {
+                        messages.forEach(message => {
+                            if (!message.dateRead) {
+                                message.dateRead = new Date(Date.now())
+                            }
+                        });
+                        this.messageThreadSource.next([...messages]);
+                    }
+                });
+            }
+        })
+
+
+        this.hubConnection.on('NewMessage', message => {
+            this.messageThread$.pipe(take(1)).subscribe({
+                next: messages => {
+                    this.messageThreadSource.next([...messages, message])
+                    console.log("NewMessage", this.messageThreadSource);
+                }
+            })
+        });
+    }
+
+    stopHubConnection() {
+        console.log("stopHubConnection");
+        if (this.hubConnection) {
+            this.hubConnection?.stop()
+                .catch(error => console.error(error))
+        }
+    }
 
     /**
      * 取得對話訊息
@@ -37,14 +95,18 @@ export class MessageService {
     }
 
     /**
-     * 發送訊息給指定的用戶
-     * @param {string} username - 收件人的用戶名
-     * @param {string} content - 訊息內容
-     * @returns {Observable<Message>} 發送的訊息的可觀察物件
-     */
-    sendMessage(username: string, content: string) {
-        return this.http.post<Message>(this.baseUrl + 'messages', { recipientUsername: username, content })
+    * 發送訊息給指定的使用者。
+    * @param username 目標使用者名稱。
+    * @param content 訊息內容。
+    * @returns 一個 Promise，表示發送訊息的非同步操作結果。
+    */
+    async sendMessage(username: string, content: string) {
+        // 使用MessageHub連線執行 'SendMessage' 方法
+        // 傳遞一個物件作為參數，包含目標使用者名稱和訊息內容
+        return this.hubConnection?.invoke('SendMessage', { recipientUsername: username, content })
+            .catch(error => console.error('SendMessage', error))
     }
+
 
     /**
      * 刪除指定ID的訊息

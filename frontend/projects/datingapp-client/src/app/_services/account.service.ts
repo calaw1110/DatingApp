@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../_models/user';
+import { PresenceService } from './presence.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,7 @@ export class AccountService {
     private currentUserSource = new BehaviorSubject<User | null>(null);
     currentUser$ = this.currentUserSource.asObservable();
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private presenceService: PresenceService) { }
 
     /**
      * 登入
@@ -56,6 +57,7 @@ export class AccountService {
         // 將 JWT 儲存在 localstorage
         localStorage.setItem('user', JSON.stringify(user));
         this.currentUserSource.next(user);
+        this.presenceService.createHubConnection(user);
     }
 
     /**
@@ -64,6 +66,7 @@ export class AccountService {
     logout(): void {
         // 將 localstorage 的 JWT 移除
         localStorage.removeItem('user');
+        this.presenceService.stopHubConnection();
         this.currentUserSource.next(null);
     }
 
