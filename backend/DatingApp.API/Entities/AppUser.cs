@@ -1,16 +1,10 @@
 using DatingApp.API.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace DatingApp.API.Entities
 {
-	public class AppUser
+	public class AppUser : IdentityUser<int>
 	{
-		public int Id { get; set; }
-
-		public string UserName { get; set; } = string.Empty;
-
-		public byte[] PasswordHash { get; set; }
-
-		public byte[] PasswordSalt { get; set; }
 
 		// DateOnly .net6才開使有 -> 單純針對某日 
 		public DateOnly DateOfBirth { get; set; }
@@ -44,5 +38,6 @@ namespace DatingApp.API.Entities
 
 		public List<Message> MessagesReceived { get; set; }
 
-	}
+        public ICollection<AppUserRole> UserRoles { get; set; }
+    }
 }
