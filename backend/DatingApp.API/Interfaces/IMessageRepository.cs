@@ -25,8 +25,6 @@ namespace DatingApp.API.Interfaces
 
 		Task<IEnumerable<MessageDto>> GetMessagesThread(string currentUsername, string recipoentUsername);
 
-		Task<bool> SaveAllAsync();
-
 		void AddGroup(Group group);
 
 		void RemoveConnection(Connection connection);

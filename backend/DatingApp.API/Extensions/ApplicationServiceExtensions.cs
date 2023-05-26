@@ -13,10 +13,11 @@ namespace DatingApp.API.Extensions
 		public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
 		{
 			// 加入資料庫連線設定
-			services.AddDbContext<DataContext>(option =>
-			{
-				option.UseSqlite(config.GetConnectionString("DefaultConnection"));
-			});
+			//services.AddDbContext<DataContext>(option =>
+			//{
+			//	//option.UseSqlite(config.GetConnectionString("SqliteConnection"));
+			//	option.UseNpgsql(config.GetConnectionString("PgsqlConneciton"));
+			//});
 
 			// CORS
 
@@ -33,9 +34,13 @@ namespace DatingApp.API.Extensions
 			services.AddScoped<IPhotoService, PhotoService>();
 
 			// 加入 Repository
-			services.AddScoped<IUserRepository, UserRepository>();
-			services.AddScoped<ILikeRepository, LikesRepository>();
-			services.AddScoped<IMessageRepository, MessageRepository>();
+			//services.AddScoped<IUserRepository, UserRepository>();
+			//services.AddScoped<ILikeRepository, LikesRepository>();
+			//services.AddScoped<IMessageRepository, MessageRepository>();
+
+			// 將個別注入的Repository服務 整合成Unit Of Work 一次注入
+			services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 			// 加入 使用者活動時間紀錄
 			services.AddScoped<LogUserActivityHelper>();
