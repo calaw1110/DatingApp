@@ -23,6 +23,6 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: "{{defaultContext}}:DatingApp.API"
+          context: "{{defaultContext}}:backend/DatingApp.API"
           push: true
           tags: calaw/datingapp:latest
