@@ -1,20 +1,17 @@
 <div class="card">
-    <div class="card-body">
+    <div
+        class="card-body"
+        #scrollMe
+        style="overflow: scroll; height: 535px"
+        [scrollTop]="scrollMe.scrollHeight">
         <div *ngIf="(messageService.messageThread$ | async)?.length === 0">
             No messages yet... say hi by using the message box below
         </div>
 
         <ul
-            #scrollMe
-            style="overflow:hidden scroll; height: 550px"
-            [scrollTop]="scrollMe.scrollHeight"
             *ngIf="(messageService.messageThread$ | async)!.length > 0"
             class="chat">
-            <li
-                *ngFor="
-                    let message of messageService.messageThread$ | async;
-                    let lastData = last
-                ">
+            <li *ngFor="let message of messageService.messageThread$ | async">
                 <div>
                     <span class="chat-img float-end">
                         <img
@@ -27,12 +24,11 @@
                     <div class="chat-body">
                         <div class="header">
                             <small class="text-muted">
-                                <span class="fa fa-clock-o">
-                                    {{ message.messageSent | timeago }}
-                                </span>
-                                &nbsp;
+                                <span class="fa fa-clock-o">{{
+                                    message.messageSent | timeago
+                                }}</span>
                                 <span
-                                    class="badge rounded-pill bg-primary"
+                                    class="text-danger"
                                     *ngIf="
                                         !message.dateRead &&
                                         message.senderUsername !== username
@@ -40,7 +36,7 @@
                                     >(unread)</span
                                 >
                                 <span
-                                    class="badge bg-success"
+                                    class="text-success"
                                     *ngIf="
                                         message.dateRead &&
                                         message.senderUsername !== username
@@ -50,7 +46,7 @@
                                 >
                             </small>
                         </div>
-                        <p class="align-middle">{{ message.content }}</p>
+                        <p>{{ message.content }}</p>
                     </div>
                 </div>
             </li>
@@ -70,12 +66,15 @@
                     type="text"
                     class="form-control input-sm"
                     placeholder="Send a private message" />
-                <button
-                    [disabled]="!messageForm.valid || loading"
-                    class="btn btn-primary"
-                    type="submit">
-                    Send <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
-                </button>
+                <div class="input-group-append">
+                    <button
+                        [disabled]="!messageForm.valid || loading"
+                        class="btn btn-primary"
+                        type="submit">
+                        Send
+                        <i *ngIf="loading" class="fa fa-spinner fa-spin"></i>
+                    </button>
+                </div>
             </div>
         </form>
     </div>

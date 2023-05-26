@@ -19,46 +19,11 @@ builder.Services.AddApplicationServices(builder.Configuration);
 // 使用jwt驗證
 builder.Services.AddIdentityService(builder.Configuration);
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-//builder.Services.AddEndpointsApiExplorer();
-
-// 註冊 Swagger UI 產生器
-//builder.Services.AddSwaggerGen(options =>
-//{
-//	// 定義 Request Header 要帶入 Authorization 以及 Token 的驗證資訊
-//	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-//	{
-//		Name = "Authorization",
-//		// Type使用SecuritySchemeType.Http，輸入Token時 不用打上 「Bearer 」
-//		Type = SecuritySchemeType.Http,
-//		Scheme = "Bearer",
-//		BearerFormat = "JWT",
-//		In = ParameterLocation.Header,
-//		Description = "JWT驗證 請貼上TOKEN: {token}"
-//	});
-
-//	// 設定 "Bearer" 的 SecurityScheme
-//	options.AddSecurityRequirement(
-//		new OpenApiSecurityRequirement
-//		{
-//			{
-//				new OpenApiSecurityScheme
-//				{
-//					Reference = new OpenApiReference
-//					{
-//						Type = ReferenceType.SecurityScheme,
-//						Id="Bearer"
-//					}
-//				},
-//				new string[] {}
-//			}
-//		});
-//});
 
 var connString = "";
 if (builder.Environment.IsDevelopment())
 	//connString = builder.Configuration.GetConnectionString("SqliteConnection");
-	connString = builder.Configuration.GetConnectionString("PgsqlConneciton");
+	connString = builder.Configuration.GetConnectionString("PgsqlConnection");
 else
 {
 	// Use connection string provided at runtime by FlyIO.
@@ -80,6 +45,7 @@ connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgP
 }
 builder.Services.AddDbContext<DataContext>(opt =>
 {
+	//opt.UseSqlite(connString);
 	opt.UseNpgsql(connString);
 });
 
@@ -140,7 +106,6 @@ try
 	var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
 	await context.Database.MigrateAsync();
 	await Seed.ClearConnection(context);
-	//await context.Database.ExecuteSqlRawAsync("DELETE FROM \"Connections\"");
 	await Seed.SeedUses(userManager, roleManager);
 }
 catch (Exception ex)

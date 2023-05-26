@@ -45,7 +45,7 @@ namespace DatingApp.API.Repositries
 		{
 			return await _context.Groups
 				.Include(x => x.Connections)
-				.Where(x => x.Connections.Any(c => c.ConnetionId == connectionId))
+				.Where(x => x.Connections.Any(c => c.ConnectionId == connectionId))
 				.FirstOrDefaultAsync();
 		}
 
