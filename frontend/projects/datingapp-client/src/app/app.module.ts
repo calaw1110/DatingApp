@@ -11,6 +11,8 @@ import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { SharedModule } from './_modules/shared.module';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
@@ -25,11 +27,10 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { MessagesComponent } from './messages/messages.component';
+import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.component';
+import { RolesModalComponent } from './modals/roles-modal/roles-modal.component';
 import { NavComponent } from './nav/nav.component';
 import { RegisterComponent } from './register/register.component';
-import { UserManagementComponent } from './admin/user-management/user-management.component';
-import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
-import { RolesModalComponent } from './modal/roles-modal/roles-modal.component';
 @NgModule({
     declarations: [
         AppComponent,
@@ -54,6 +55,7 @@ import { RolesModalComponent } from './modal/roles-modal/roles-modal.component';
         UserManagementComponent,
         PhotoManagementComponent,
         RolesModalComponent,
+        ConfirmDialogComponent,
     ],
     imports: [
         BrowserModule,

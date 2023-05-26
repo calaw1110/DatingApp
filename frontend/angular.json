@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/datingapp-client",
+            "outputPath": "../backend/DatingApp.API/wwwroot",
             "index": "projects/datingapp-client/src/index.html",
             "main": "projects/datingapp-client/src/main.ts",
             "polyfills": "projects/datingapp-client/src/polyfills.ts",
@@ -38,8 +38,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
