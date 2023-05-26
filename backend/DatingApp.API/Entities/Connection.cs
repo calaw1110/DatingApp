@@ -8,13 +8,13 @@ namespace DatingApp.API.Entities
 		{
 
 		}
-		public Connection(string connetionId, string username)
+		public Connection(string connectionId, string username)
 		{
-			ConnetionId = connetionId;
+			ConnectionId = connectionId;
 			Username = username;
 		}
 		[Key]
-		public string ConnetionId { get; set; }
+		public string ConnectionId { get; set; }
 		public string Username { get; set; }
 	}
 }
