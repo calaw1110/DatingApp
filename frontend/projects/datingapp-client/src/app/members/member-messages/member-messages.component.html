@@ -5,9 +5,16 @@
         </div>
 
         <ul
+            #scrollMe
+            style="overflow:hidden scroll; height: 550px"
+            [scrollTop]="scrollMe.scrollHeight"
             *ngIf="(messageService.messageThread$ | async)!.length > 0"
             class="chat">
-            <li *ngFor="let message of messageService.messageThread$ | async; let lastData = last;">
+            <li
+                *ngFor="
+                    let message of messageService.messageThread$ | async;
+                    let lastData = last
+                ">
                 <div>
                     <span class="chat-img float-end">
                         <img
@@ -23,15 +30,23 @@
                                 <span class="fa fa-clock-o">
                                     {{ message.messageSent | timeago }}
                                 </span>
+                                &nbsp;
                                 <span
                                     class="badge rounded-pill bg-primary"
-                                    *ngIf="!message.dateRead && message.senderUsername !== username"
+                                    *ngIf="
+                                        !message.dateRead &&
+                                        message.senderUsername !== username
+                                    "
                                     >(unread)</span
                                 >
                                 <span
                                     class="badge bg-success"
-                                    *ngIf="message.dateRead && message.senderUsername !== username"
-                                    >(read {{ message.dateRead | timeago }})</span
+                                    *ngIf="
+                                        message.dateRead &&
+                                        message.senderUsername !== username
+                                    "
+                                    >(read
+                                    {{ message.dateRead | timeago }})</span
                                 >
                             </small>
                         </div>
