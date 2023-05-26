@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { Group } from '../_models/Group';
 import { Message } from '../_models/message';
 import { User } from '../_models/user';
+import { BusyService } from './busy.service';
 import { getPaginatedResult, getPaginationHeaders } from './paginationHelper';
 
 @Injectable({
@@ -19,9 +20,10 @@ export class MessageService {
     private messageThreadSource = new BehaviorSubject<Message[]>([]);
     messageThread$ = this.messageThreadSource.asObservable();
     /** 建構式 */
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private busyService: BusyService) { }
 
     createHubConnection(user: User, otherUsername: string) {
+        this.busyService.busy();
         this.hubConnection = new HubConnectionBuilder()
             .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
                 accessTokenFactory: () => user.token
@@ -31,8 +33,10 @@ export class MessageService {
 
         this.hubConnection.start()
             .catch(
-                error => console.error(error)
-            );
+                error => console.log(error)
+            ).finally(() => {
+                this.busyService.idle()
+            });
 
         this.hubConnection.on('ReceiveMessageThread', message => {
             this.messageThreadSource.next(message);
@@ -67,8 +71,9 @@ export class MessageService {
     stopHubConnection() {
         console.log("stopHubConnection");
         if (this.hubConnection) {
+            this.messageThreadSource.next([]);
             this.hubConnection?.stop()
-                .catch(error => console.error(error))
+                .catch(error => console.log(error))
         }
     }
 
@@ -104,7 +109,7 @@ export class MessageService {
         // 使用MessageHub連線執行 'SendMessage' 方法
         // 傳遞一個物件作為參數，包含目標使用者名稱和訊息內容
         return this.hubConnection?.invoke('SendMessage', { recipientUsername: username, content })
-            .catch(error => console.error('SendMessage', error))
+            .catch(error => console.log('SendMessage', error))
     }
 
 

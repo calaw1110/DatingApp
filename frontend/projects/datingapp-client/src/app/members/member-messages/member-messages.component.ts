@@ -4,7 +4,7 @@ import { Message } from '../../_models/message';
 import { MessageService } from '../../_services/message.service';
 
 @Component({
-    changeDetection:ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-member-messages',
     templateUrl: './member-messages.component.html',
     styleUrls: ['./member-messages.component.css']
@@ -19,7 +19,6 @@ export class MemberMessagesComponent implements OnInit {
     constructor(public messageService: MessageService) { }
 
     ngOnInit(): void {
-        console.log('messages1', this.messages);
     }
 
     /**
@@ -30,6 +29,7 @@ export class MemberMessagesComponent implements OnInit {
         this.loading = true; // 設定載入狀態為 true
         this.messageService.sendMessage(this.username, this.messageContent).then(() => {
             this.messageForm?.reset();
+        }).finally(() => {
             this.loading = false;
         })
     }
