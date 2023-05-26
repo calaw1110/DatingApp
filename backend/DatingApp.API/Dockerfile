@@ -3,10 +3,7 @@ WORKDIR /app
 EXPOSE 8080
 
 # run ng build
-COPY package.json package-lock.json ./
-RUN npm install
-COPY . .
-RUN npm run build
+RUN ng build
 
 # copy csproj and restore as distinct layers
 COPY *.csproj ./
