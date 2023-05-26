@@ -35,13 +35,13 @@ namespace DatingApp.API.Helper
 
 
 			// 取得使用者 Repository 服務
-			var repo = resultContext.HttpContext.RequestServices.GetRequiredService<IUserRepository>();
+			var uow = resultContext.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();
 
 			// 取得使用者id
 			var userId = resultContext.HttpContext.User.GetUserId();
 
 			// 取得使用者
-			var user = await repo.GetUserByIdAsync(userId);
+			var user = await uow.UserRepository.GetUserByIdAsync(userId);
 
 			// 更新使用者的最後活動時間為當前時間（UTC 格式）
 			user.LastActive = DateTime.UtcNow;
@@ -77,7 +77,7 @@ namespace DatingApp.API.Helper
 			}
 
 			// 儲存更新後的使用者資料
-			await repo.SaveAllAsync();
+			await uow.Complete();
 		}
 	}
 }

@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DatingApp.API.Data;
 using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
 using DatingApp.API.Helper;
-using DatingApp.API.Interfaces;
-using AutoMapper;
 using DatingApp.API.Helper.Params;
-using AutoMapper.QueryableExtensions;
+using DatingApp.API.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Repositries
 {
@@ -92,11 +91,11 @@ namespace DatingApp.API.Repositries
 
 		public async Task<IEnumerable<MessageDto>> GetMessagesThread(string currentUsername, string recipientUsername)
 		{
-			var messages = await _context.Messages
-				// 發送者的頭像照片信息
-				.Include(u => u.Sender).ThenInclude(p => p.Photos)
-				// 接收者的頭像照片信息
-				.Include(u => u.Recipient).ThenInclude(p => p.Photos)
+			var query = _context.Messages
+				//// 發送者的頭像照片信息
+				//.Include(u => u.Sender).ThenInclude(p => p.Photos)
+				//// 接收者的頭像照片信息
+				//.Include(u => u.Recipient).ThenInclude(p => p.Photos)
 				.Where(
 					// 條件：接收者用戶名等於 currentUsername 且發送者用戶名等於 recipientUsername
 					m => m.RecipientUsername == currentUsername && m.SenderUsername == recipientUsername && m.RecipientDeleted == false
@@ -104,10 +103,10 @@ namespace DatingApp.API.Repositries
 					// 或者條件：接收者用戶名等於 recipientUsername 且發送者用戶名等於 currentUsername
 					m.RecipientUsername == recipientUsername && m.SenderUsername == currentUsername && m.SenderDeleted == false
 				)
-				.OrderByDescending(m => m.MessageSent)
-				.ToListAsync();
+				.OrderBy(m => m.MessageSent)
+				.AsQueryable();
 
-			var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
+			var unreadMessages = query.Where(m => m.DateRead == null && m.RecipientUsername == currentUsername).ToList();
 
 			// 如果有未讀消息，標記它們為已讀並保存到資料庫
 			if (unreadMessages.Any())
@@ -116,21 +115,15 @@ namespace DatingApp.API.Repositries
 				{
 					message.DateRead = DateTime.UtcNow;
 				}
-				await _context.SaveChangesAsync();
 			}
 
-			// Map to MessageDto 
-			return _mapper.Map<IEnumerable<MessageDto>>(messages);
+			// Map to MessageDto
+			return await query.ProjectTo<MessageDto>(_mapper.ConfigurationProvider).ToListAsync();
 		}
 
 		public void RemoveConnection(Connection connection)
 		{
 			_context.Connections.Remove(connection);
-		}
-
-		public async Task<bool> SaveAllAsync()
-		{
-			return await _context.SaveChangesAsync() > 0;
 		}
 	}
 }

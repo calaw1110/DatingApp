@@ -8,16 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
-    // /api/Likes/...
-    public class LikesController : BaseApiController
+	// /api/Likes/...
+	public class LikesController : BaseApiController
 	{
-		private readonly IUserRepository _userRepository;
-		private readonly ILikeRepository _likeRepository;
+		private readonly IUnitOfWork _uow;
 
-		public LikesController(IUserRepository userRepository, ILikeRepository likeRepository)
+		public LikesController(IUnitOfWork uow)
 		{
-			this._userRepository = userRepository;
-			this._likeRepository = likeRepository;
+			this._uow = uow;
 		}
 
 		[HttpPost("{username}")]
@@ -25,15 +23,15 @@ namespace DatingApp.API.Controllers
 		{
 			var sourceUserId = User.GetUserId();
 
-			var likeUser = await _userRepository.GetUserByUsernameAsync(username);
+			var likeUser = await _uow.UserRepository.GetUserByUsernameAsync(username);
 
-			var sourceUser = await _likeRepository.GetUserWithLikes(sourceUserId);
+			var sourceUser = await _uow.LikeRepository.GetUserWithLikes(sourceUserId);
 
 			if (likeUser == null) return NotFound();
 
 			if (sourceUser.UserName == username) return BadRequest("You caanot like yourself");
 
-			var userLike = await _likeRepository.GetUserLike(sourceUserId, likeUser.Id);
+			var userLike = await _uow.LikeRepository.GetUserLike(sourceUserId, likeUser.Id);
 
 			if (userLike != null) return BadRequest("You already like this user");
 
@@ -44,7 +42,7 @@ namespace DatingApp.API.Controllers
 			};
 			sourceUser.LikedUsers.Add(userLike);
 
-			if (await _userRepository.SaveAllAsync()) return Ok();
+			if (await _uow.Complete()) return Ok();
 
 			return BadRequest("Failed to like user");
 
@@ -57,7 +55,7 @@ namespace DatingApp.API.Controllers
 
 			if (string.IsNullOrEmpty(likeParams.Predicate)) likeParams.Predicate = "liked";
 
-			var users = await _likeRepository.GetUserLikes(likeParams);
+			var users = await _uow.LikeRepository.GetUserLikes(likeParams);
 
 			Response.AddPaginationHeader(
 				new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages)

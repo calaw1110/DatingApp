@@ -11,16 +11,14 @@ namespace DatingApp.API.Controllers
 	public class AccountController : BaseApiController
 	{
 		private readonly UserManager<AppUser> _userManager;
-		private readonly IUserRepository _userRepository;
 
 		public ITokenService _tokenService { get; }
 		public IMapper _mapper { get; }
 
-		public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IUserRepository userRepository, IMapper mapper)
+		public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper)
 		{
 			this._userManager = userManager;
 			this._tokenService = tokenService;
-			this._userRepository = userRepository;
 			this._mapper = mapper;
 		}
 

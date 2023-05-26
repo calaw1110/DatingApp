@@ -36,7 +36,6 @@ namespace DatingApp.API.Controllers
 					u.Id,
 					Username = u.UserName,
 					Roles = u.UserRoles.Select(r => r.Role.Name).ToList()
-
 				}).ToListAsync();
 			return Ok(users);
 		}
@@ -45,13 +44,11 @@ namespace DatingApp.API.Controllers
 		[HttpPut("edit-roles")]
 		public async Task<ActionResult> EditRoles(MemberRoleUpdateDto memberRoleDto)
 		{
-
 			var user = await _userManager.FindByNameAsync(memberRoleDto.Username);
 
 			if (user == null) return NotFound();
 
 			var userRoles = await _userManager.GetRolesAsync(user);
-
 
 			var result = await _userManager.AddToRolesAsync(user, memberRoleDto.Roles.Except(userRoles));
 			if (!result.Succeeded) return BadRequest("Failed to add roles");
