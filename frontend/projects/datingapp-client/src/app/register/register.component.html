@@ -1,0 +1,42 @@
+<form [formGroup]="registerForm" (ngSubmit)=" registerForm.valid && register()">
+    <h2 class="text-center text-primary">Sign up</h2>
+    <hr>
+    <div class="mb-3">
+        <label style="margin-right: 10px;">I am a : </label>
+        <div class="form-check form-check-inline">
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" value="male" formControlName="gender">
+                Male
+            </label>
+        </div>
+        <div class="form-check form-check-inline">
+            <label class="form-check-label">
+                <input type="radio" class="form-check-input" value="female" formControlName="gender">
+                Female
+            </label>
+        </div>
+    </div>
+    <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'帳號'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['knownAs'])" [label]="'關於我'"></app-text-input>
+    <app-date-picker [formControl]="$any(registerForm.controls['dateOfBirth'])" [maxDate]="maxDate"
+        [label]="'生日'"></app-date-picker>
+    <app-text-input [formControl]="$any(registerForm.controls['city'])" [label]="'城市'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['country'])" [label]="'國家'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'密碼'"
+        [type]="'password'"></app-text-input>
+    <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'確認密碼'"
+        [type]="'password'"></app-text-input>
+
+    <div class="row" *ngIf="validationErrors">
+        <ul class="text-danger">
+            <li *ngFor="let error of validationErrors">
+                {{error}}
+            </li>
+        </ul>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-success me-2" type="submit" [disabled]="!registerForm.valid">Register</button>
+        <button class=" btn btn-danger " type=" button" (click)="cancel()">Cancel</button>
+    </div>
+</form>

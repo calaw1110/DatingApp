@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/datingapp-client",
+            "outputPath": "../backend/DatingApp.API/wwwroot",
             "index": "projects/datingapp-client/src/index.html",
             "main": "projects/datingapp-client/src/main.ts",
             "polyfills": "projects/datingapp-client/src/polyfills.ts",
@@ -23,6 +23,12 @@
               "projects/datingapp-client/src/assets"
             ],
             "styles": [
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootswatch/dist/journal/bootstrap.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/ngx-spinner/animations/line-scale-pulse-out-rapid.css",
               "projects/datingapp-client/src/styles.css"
             ],
             "scripts": []
@@ -32,8 +38,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -61,6 +67,11 @@
           "defaultConfiguration": "production"
         },
         "serve": {
+          "options": {
+            "sslCert": "ssl/server.crt",
+            "sslKey": "ssl/server.key",
+            "ssl": true
+          },
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
@@ -89,9 +100,7 @@
               "projects/datingapp-client/src/favicon.ico",
               "projects/datingapp-client/src/assets"
             ],
-            "styles": [
-              "projects/datingapp-client/src/styles.css"
-            ],
+            "styles": ["projects/datingapp-client/src/styles.css"],
             "scripts": []
           }
         }

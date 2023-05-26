@@ -1,0 +1,81 @@
+<div class="row">
+    <div class="col-4">
+        <div class="card">
+            <img
+                class="card-img-top img-thumbnail"
+                src="{{ member.photoUrl || './assets/user.png' }}"
+                alt="{{ member.knownAs }}" />
+            <div class="card-body">
+                <div
+                    class="mb-2"
+                    *ngIf="
+                        (presenceService.onlineUsers$ | async)?.includes(
+                            member.userName
+                        )
+                    ">
+                    <i class="fa fa-user-circle text-success"></i> Online Now
+                </div>
+                <div>
+                    <strong>Localtion:</strong>
+                    <p>{{ member.city }},{{ member.country }}</p>
+                </div>
+                <div>
+                    <strong>Age:</strong>
+                    <p>{{ member.age }}</p>
+                </div>
+                <div>
+                    <strong>Last active:</strong>
+                    <p>{{ member.lastActive | timeago }}</p>
+                </div>
+                <div>
+                    <strong>Memver since:</strong>
+                    <p>{{ member.created | date : "dd MMM YYYY" }}</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="btn-group d-flex">
+                    <button class="btn btn-primary">
+                        <i class="fa fa-heart" aria-hidden="true"></i> Like
+                    </button>
+                    <button
+                        class="btn btn-success"
+                        type="button"
+                        (click)="selectTab('Messages')">
+                        <i class="fa fa-comments" aria-hidden="true"></i>
+                        Message
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-8">
+        <tabset class="member-tabset" #memberTabs>
+            <tab
+                heading="About {{ member.knownAs }}"
+                (selectTab)="onTabActivated($event)">
+                <h4>Description</h4>
+                <p>{{ member.introduction }}</p>
+                <h4>Looking for</h4>
+                <p>{{ member.lookingFor }}</p>
+            </tab>
+
+            <tab heading="Interests" (selectTab)="onTabActivated($event)">
+                <h4>Interests</h4>
+                <p>{{ member.interests }}</p>
+            </tab>
+
+            <tab heading="Photos" (selectTab)="onTabActivated($event)">
+                <ngx-gallery
+                    [options]="galleryOptions"
+                    [images]="galleryImages"
+                    class="ngx-gallery"></ngx-gallery>
+            </tab>
+
+            <tab heading="Messages" (selectTab)="onTabActivated($event)">
+                <app-member-messages [username]="member.userName">
+                </app-member-messages>
+            </tab>
+        </tabset>
+    </div>
+</div>
