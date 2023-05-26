@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { environment } from 'projects/datingapp-client/src/environments/environment';
 import { AccountService } from '../../_services/account.service';
 
 @Component({
@@ -9,7 +10,7 @@ import { AccountService } from '../../_services/account.service';
 })
 export class TestErrorComponent implements OnInit {
 
-    baseUrl = 'https://localhost:5001/api/';
+    baseUrl = environment.apiUrl;
 
     validationErrors: string[] = []
 
