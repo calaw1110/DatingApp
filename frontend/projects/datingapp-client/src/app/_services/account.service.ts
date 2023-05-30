@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { User } from '../_models/user';
+import { EncryptAndDecryptService } from './encrypt-and-decrypt.service';
 import { PresenceService } from './presence.service';
 
 @Injectable({
@@ -13,7 +14,7 @@ export class AccountService {
     private currentUserSource = new BehaviorSubject<User | null>(null);
     currentUser$ = this.currentUserSource.asObservable();
 
-    constructor(private http: HttpClient, private presenceService: PresenceService) { }
+    constructor(private http: HttpClient, private presenceService: PresenceService, private cryptService: EncryptAndDecryptService) { }
 
     /**
      * 登入
@@ -21,7 +22,9 @@ export class AccountService {
      * @returns {Observable<User>} 使用者的可觀察物件
      */
     login(model: any) {
-        return this.http.post<User>(this.baseUrl + 'account/login', model).pipe(
+        let loginModel = this.encyptLoginModel(model);
+
+        return this.http.post<User>(this.baseUrl + 'account/login', loginModel).pipe(
             map((response: User) => {
                 const user = response;
                 if (user) {
@@ -72,5 +75,15 @@ export class AccountService {
 
     getDecodedToken(token: string) {
         return JSON.parse(window.atob(token.split('.')[1]))
+    }
+
+    private encyptLoginModel(model: any) {
+        let loginModel = { ...model }
+        Object.keys(loginModel).forEach(key => {
+            console.log(loginModel[key]);
+            loginModel[key] = this.cryptService.encryptAES(loginModel[key])
+            console.log(loginModel[key]);
+        });
+        return loginModel;
     }
 }
