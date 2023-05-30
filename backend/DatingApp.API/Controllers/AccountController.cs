@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DatingApp.API.DTOs;
 using DatingApp.API.Entities;
+using DatingApp.API.Extensions;
 using DatingApp.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,17 @@ namespace DatingApp.API.Controllers
 	public class AccountController : BaseApiController
 	{
 		private readonly UserManager<AppUser> _userManager;
+		private readonly IConfiguration _config;
 
 		public ITokenService _tokenService { get; }
 		public IMapper _mapper { get; }
 
-		public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper)
+		public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper,IConfiguration config)
 		{
 			this._userManager = userManager;
 			this._tokenService = tokenService;
 			this._mapper = mapper;
+			this._config = config;
 		}
 
 		[HttpPost("register")] // POST: /api/account/register
@@ -54,11 +57,11 @@ namespace DatingApp.API.Controllers
 		{
 			var user = await _userManager.Users
 				.Include(p => p.Photos)
-				.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+				.SingleOrDefaultAsync(x => x.UserName == loginDto.Username.ToAESDecrypt());
 
 			if (user == null) return Unauthorized("Invalid account or password");
 
-			var result = await _userManager.CheckPasswordAsync(user, loginDto.Password);
+			var result = await _userManager.CheckPasswordAsync(user, loginDto.Password.ToAESDecrypt());
 
 			if (!result) return Unauthorized("Invalid account or password");
 
