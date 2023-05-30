@@ -31,6 +31,9 @@
               "node_modules/ngx-spinner/animations/line-scale-pulse-out-rapid.css",
               "projects/datingapp-client/src/styles.css"
             ],
+            "allowedCommonJsDependencies":[
+            "crypto-js"
+            ],
             "scripts": []
           },
           "configurations": {
