@@ -80,9 +80,7 @@ export class AccountService {
     private encyptLoginModel(model: any) {
         let loginModel = { ...model }
         Object.keys(loginModel).forEach(key => {
-            console.log(loginModel[key]);
             loginModel[key] = this.cryptService.encryptAES(loginModel[key])
-            console.log(loginModel[key]);
         });
         return loginModel;
     }
