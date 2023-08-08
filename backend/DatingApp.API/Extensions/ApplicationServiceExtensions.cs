@@ -1,10 +1,8 @@
 ﻿using DatingApp.API.Data;
 using DatingApp.API.Helper;
 using DatingApp.API.Interfaces;
-using DatingApp.API.Repositries;
 using DatingApp.API.Services;
 using DatingApp.API.SignalR;
-using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Extensions
 {
@@ -23,7 +21,6 @@ namespace DatingApp.API.Extensions
 
 			services.AddCors();
 
-
 			// 加入Cloudinary
 			services.Configure<CloudinaryHelper>(config.GetSection("CloudinarySettings"));
 
@@ -41,15 +38,13 @@ namespace DatingApp.API.Extensions
 			// 將個別注入的Repository服務 整合成Unit Of Work 一次注入
 			services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-
 			// 加入 使用者活動時間紀錄
 			services.AddScoped<LogUserActivityHelper>();
 
-			#endregion
+			#endregion Scoped - 同一個 Request 中，都是同樣的實例
 
 			// 加入 automapper
 			services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
 
 			// 加入 SignalR 服務
 			services.AddSignalR();

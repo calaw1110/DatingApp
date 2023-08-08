@@ -17,7 +17,7 @@ namespace DatingApp.API.Controllers
 		public ITokenService _tokenService { get; }
 		public IMapper _mapper { get; }
 
-		public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper,IConfiguration config)
+		public AccountController(UserManager<AppUser> userManager, ITokenService tokenService, IMapper mapper, IConfiguration config)
 		{
 			this._userManager = userManager;
 			this._tokenService = tokenService;

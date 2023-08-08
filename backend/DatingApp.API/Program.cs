@@ -6,7 +6,6 @@ using DatingApp.API.SignalR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -18,7 +17,6 @@ builder.Services.AddApplicationServices(builder.Configuration);
 
 // 使用jwt驗證
 builder.Services.AddIdentityService(builder.Configuration);
-
 
 var connString = "";
 if (builder.Environment.IsDevelopment())
@@ -41,7 +39,7 @@ else
 	var pgPort = pgHostPort.Split(":")[1];
 	var updatedHost = pgHost.Replace("flycast", "internal");
 
-connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+	connString = $"Server={updatedHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
 }
 builder.Services.AddDbContext<DataContext>(opt =>
 {
@@ -49,27 +47,18 @@ builder.Services.AddDbContext<DataContext>(opt =>
 	opt.UseNpgsql(connString);
 });
 
-
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-	//app.UseSwagger();
-	//app.UseSwaggerUI();
 }
-
 
 // add error handler middleware
 app.UseMiddleware<ExceptionMiddleware>();
 
-
-
-// 因調整launchSetting.json 註解以下功能 
+// 因調整launchSetting.json 註解以下功能
 // app.UseHttpsRedirection();
-
 
 // 調整CORS政策 允許 http://localhost:4200 任何請求
 app.UseCors(builder => builder
@@ -94,7 +83,6 @@ app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/message");
 
 app.MapFallbackToController("Index", "Fallback");
-
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

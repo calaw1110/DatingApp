@@ -1,12 +1,10 @@
 ﻿using DatingApp.API.Data;
 using DatingApp.API.Entities;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatingApp.API.Controllers
 {
-
 	public class BuggyController : BaseApiController
 	{
 		private readonly DataContext _context;
@@ -15,12 +13,14 @@ namespace DatingApp.API.Controllers
 		{
 			this._context = context;
 		}
+
 		[Authorize]
 		[HttpGet("auth")]
 		public ActionResult<string> GetSecret()
 		{
 			return Ok();
 		}
+
 		[HttpGet("not-found")]
 		public ActionResult<AppUser> GetNotFound()
 		{
@@ -30,10 +30,10 @@ namespace DatingApp.API.Controllers
 
 			return thing;
 		}
+
 		[HttpGet("server-error")]
 		public ActionResult<string> GetServerError()
 		{
-
 			var thing = _context.Users.Find(-1);
 
 			var thingToReturn = thing.ToString();
@@ -46,6 +46,5 @@ namespace DatingApp.API.Controllers
 		{
 			return BadRequest("This was not a good request");
 		}
-
 	}
 }

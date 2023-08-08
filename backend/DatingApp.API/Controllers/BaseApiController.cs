@@ -10,7 +10,6 @@ namespace DatingApp.API.Controllers
 	{
 		public BaseApiController()
 		{
-
 		}
 	}
 }

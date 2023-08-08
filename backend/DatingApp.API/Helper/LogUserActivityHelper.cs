@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace DatingApp.API.Helper
 {
-    /// <summary>
-    /// 用於記錄使用者活動時間的幫助程式類別。
-    /// 實作了 <see cref="IAsyncActionFilter"/> 介面，以在動作方法執行前後進行相應處理。
-    /// </summary>
-    public class LogUserActivityHelper : IAsyncActionFilter
+	/// <summary>
+	/// 用於記錄使用者活動時間的幫助程式類別。
+	/// 實作了 <see cref="IAsyncActionFilter"/> 介面，以在動作方法執行前後進行相應處理。
+	/// </summary>
+	public class LogUserActivityHelper : IAsyncActionFilter
 	{
 		private readonly ILogger<LogUserActivityHelper> _logger;
 
@@ -32,7 +32,6 @@ namespace DatingApp.API.Helper
 
 			// 檢查使用者是否已驗證，若未驗證則不進行處理
 			if (!resultContext.HttpContext.User.Identity.IsAuthenticated) return;
-
 
 			// 取得使用者 Repository 服務
 			var uow = resultContext.HttpContext.RequestServices.GetRequiredService<IUnitOfWork>();

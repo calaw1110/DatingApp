@@ -11,6 +11,5 @@
 			if (DateOfBirth > today.AddDays(-age)) age--;
 			return age;
 		}
-
 	}
 }

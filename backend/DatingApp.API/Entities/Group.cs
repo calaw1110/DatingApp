@@ -6,8 +6,8 @@ namespace DatingApp.API.Entities
 	{
 		public Group()
 		{
-
 		}
+
 		public Group(string name)
 		{
 			Name = name;
@@ -15,6 +15,7 @@ namespace DatingApp.API.Entities
 
 		[Key]
 		public string Name { get; set; }
+
 		public ICollection<Connection> Connections { get; set; } = new List<Connection>();
 	}
 }

@@ -5,7 +5,7 @@ using DatingApp.API.Helper.Params;
 
 namespace DatingApp.API.Interfaces
 {
-    public interface IUserRepository
+	public interface IUserRepository
 	{
 		void Update(AppUser user);
 

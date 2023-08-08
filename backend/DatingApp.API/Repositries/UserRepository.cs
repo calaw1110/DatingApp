@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Repositries
 {
-    public class UserRepository : IUserRepository
+	public class UserRepository : IUserRepository
 	{
 		private readonly DataContext _context;
 		private readonly IMapper _mapper;
@@ -51,8 +51,6 @@ namespace DatingApp.API.Repositries
 
 			return await PagedList<MemberDto>.CreateAsync(query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider), userParams.PageNumber, userParams.PageSize);
 
-
-
 			//var query = _context.Users
 			//	.ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
 			//	// 讓ef對此次查詢結果不追蹤，提高查詢的性能，節省記憶體
@@ -76,7 +74,7 @@ namespace DatingApp.API.Repositries
 
 		public async Task<string> GetUserGender(string username)
 		{
-			return await _context.Users.Where(x=>x.UserName ==username).Select(x=>x.Gender).FirstOrDefaultAsync();
+			return await _context.Users.Where(x => x.UserName == username).Select(x => x.Gender).FirstOrDefaultAsync();
 		}
 
 		public async Task<IEnumerable<AppUser>> GetUsersAsync()

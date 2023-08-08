@@ -19,12 +19,9 @@ namespace DatingApp.API.SignalR
 			var isOnline = await _tracker.UserConnected(Context.User.GetUsername(), Context.ConnectionId);
 			if (isOnline) await Clients.Others.SendAsync("UserIsOnline", Context.User.GetUsername());
 
-
 			var currentUsers = await _tracker.GetOnlineUsers();
 			await Clients.All.SendAsync("GetOnlineUsers", currentUsers);
 		}
-
-
 
 		public override async Task OnDisconnectedAsync(Exception exception)
 		{

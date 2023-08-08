@@ -2,7 +2,6 @@
 
 namespace DatingApp.API.Controllers
 {
-
 	public class FallbackController : Controller
 	{
 		public ActionResult Index()

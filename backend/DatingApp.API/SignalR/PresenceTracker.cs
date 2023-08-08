@@ -6,7 +6,6 @@
 
 		public Task<bool> UserConnected(string username, string connectionId)
 		{
-
 			bool isOnline = false;
 
 			lock (OnlineUsers)
@@ -21,13 +20,12 @@
 					isOnline = true;
 				}
 			}
-			
+
 			return Task.FromResult(isOnline);
 		}
 
 		public Task<bool> UserDisconneted(string username, string connectionId)
 		{
-
 			bool isOffline = false;
 			lock (OnlineUsers)
 			{

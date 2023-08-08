@@ -62,7 +62,6 @@ namespace DatingApp.API.Controllers
 			return messages;
 		}
 
-
 		[HttpDelete("{id}")]
 		public async Task<ActionResult> DeleteMessage(int id)
 		{

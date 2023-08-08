@@ -21,6 +21,7 @@ namespace DatingApp.API.Services
 			_key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
 			this._userManager = userManager;
 		}
+
 		/// <summary>
 		/// 建立 帳號登入 token
 		/// </summary>
@@ -28,7 +29,6 @@ namespace DatingApp.API.Services
 		/// <returns></returns>
 		public async Task<string> CreateToken(AppUser user)
 		{
-
 			// 建立一個宣告（Claim）的List
 			var claims = new List<Claim>
 			{
@@ -36,15 +36,14 @@ namespace DatingApp.API.Services
 				// 宣告的值是使用者的識別符（user.Id.ToString()）
 
 				new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-    
+
 				// 在List中添加一個Claim，Claim類型為 JwtRegisteredClaimNames.UniqueName
 				// 宣告的值是使用者的使用者名稱（user.UserName）
 
 				new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
 			};
 
-
-			var roles =await _userManager.GetRolesAsync(user);
+			var roles = await _userManager.GetRolesAsync(user);
 
 			claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
@@ -62,7 +61,6 @@ namespace DatingApp.API.Services
 				Expires = DateTime.Now.AddDays(7),
 				SigningCredentials = creds
 			};
-
 
 			var tokenHandler = new JwtSecurityTokenHandler();
 

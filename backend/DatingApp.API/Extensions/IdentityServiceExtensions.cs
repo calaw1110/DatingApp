@@ -20,7 +20,6 @@ namespace DatingApp.API.Extensions
 		/// <returns>修改後的服務集合。</returns>
 		public static IServiceCollection AddIdentityService(this IServiceCollection services, IConfiguration config)
 		{
-
 			services.AddIdentityCore<AppUser>(option =>
 			{
 				option.Password.RequireNonAlphanumeric = false;
@@ -28,14 +27,10 @@ namespace DatingApp.API.Extensions
 				option.Password.RequireLowercase = false;
 				option.Password.RequireUppercase = false;
 				option.Password.RequireDigit = false;
-
 			})
 			.AddRoles<AppRole>()
 			.AddRoleManager<RoleManager<AppRole>>()
 			.AddEntityFrameworkStores<DataContext>();
-
-
-
 
 			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 				.AddJwtBearer(options =>
@@ -69,14 +64,13 @@ namespace DatingApp.API.Extensions
 			services.AddAuthorization(options =>
 			{
 				// [Authorize(Policy = "RequireAdminRole")]
-				// endpoint 有此屬性時，呼叫的使用者角色需有 Admin 
+				// endpoint 有此屬性時，呼叫的使用者角色需有 Admin
 				options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
 
 				// [Authorize(Policy = "ModeratePhotoRole")]
 				// endpoint 有此屬性時，呼叫的使用者角色需有 Admin 或 Moderator
 				options.AddPolicy("ModeratePhotoRole", policy => policy.RequireRole("Admin", "Moderator"));
 			});
-
 
 			return services;
 		}

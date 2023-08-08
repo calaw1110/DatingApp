@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Repositries
 {
-    public class LikesRepository : ILikeRepository
+	public class LikesRepository : ILikeRepository
 	{
 		private readonly DataContext _context;
 
@@ -53,7 +53,6 @@ namespace DatingApp.API.Repositries
 
 			return await PagedList<LikeDto>.CreateAsync(likedUser, likeParams.PageNumber, likeParams.PageSize);
 		}
-
 
 		public async Task<AppUser> GetUserWithLikes(int userId)
 		{

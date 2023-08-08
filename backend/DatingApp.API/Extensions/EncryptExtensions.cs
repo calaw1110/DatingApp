@@ -18,7 +18,6 @@ namespace DatingApp.API.Extensions
 				using ICryptoTransform decryptor = aesAlg.CreateDecryptor();
 				byte[] decryptedBytes = decryptor.TransformFinalBlock(needDecryptBytes, 0, needDecryptBytes.Length);
 				result = Encoding.UTF8.GetString(decryptedBytes);
-
 			}
 			catch (Exception ex)
 			{
@@ -46,6 +45,7 @@ namespace DatingApp.API.Extensions
 
 			return result;
 		}
+
 		private static Aes GetEncryptionAlgSetting()
 		{
 			Aes aes = Aes.Create();

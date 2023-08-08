@@ -45,7 +45,6 @@ namespace DatingApp.API.Controllers
 			if (await _uow.Complete()) return Ok();
 
 			return BadRequest("Failed to like user");
-
 		}
 
 		[HttpGet]
@@ -76,8 +75,6 @@ namespace DatingApp.API.Controllers
 
 		//	if (sourceUser.UserName == username) return BadRequest("You caanot like yourself");
 
-
 		//}
-
 	}
 }

@@ -33,7 +33,6 @@ namespace DatingApp.API.Data
 				// 設定外鍵為必需的，不能為 null
 				.IsRequired();
 
-
 			modelBuilder.Entity<AppRole>()
 				// 配置一對多關係：一個 AppRole 可以擁有多個 UserRoles
 				.HasMany(ur => ur.UserRoles)
@@ -43,9 +42,6 @@ namespace DatingApp.API.Data
 				.HasForeignKey(ur => ur.RoleId)
 				// 設定外鍵為必需的，不能為 null
 				.IsRequired();
-
-
-
 
 			modelBuilder.Entity<UserLike>()
 				// 設定複合主鍵：由 SourceUserId 和 TargetUserId 兩個屬性組成
@@ -86,7 +82,6 @@ namespace DatingApp.API.Data
 				.WithMany(m => m.MessagesSent)
 				// 禁用串聯刪除：刪除 Message 對象時不影響相應的 Sender 對象
 				.OnDelete(DeleteBehavior.Restrict);
-
 		}
 	}
 }

@@ -2,7 +2,6 @@
 
 namespace DatingApp.API.DTOs
 {
-
 	public class RegisterDto
 	{
 		[Required]
@@ -22,7 +21,6 @@ namespace DatingApp.API.DTOs
 
 		[Required]
 		public string Country { get; set; }
-
 
 		[Required]
 		[StringLength(8, MinimumLength = 4)]

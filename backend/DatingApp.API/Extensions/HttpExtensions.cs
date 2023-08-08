@@ -20,8 +20,6 @@ namespace DatingApp.API.Extensions
 
 			// 使用Access-Control-Expose-Headers 公開自定義 Headers
 			response.Headers.Add("Access-Control-Expose-Headers", "Pagination");
-
-
 		}
 	}
 }

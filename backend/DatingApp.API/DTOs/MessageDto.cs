@@ -1,6 +1,4 @@
-﻿using DatingApp.API.Entities;
-
-namespace DatingApp.API.DTOs
+﻿namespace DatingApp.API.DTOs
 {
 	public class MessageDto
 	{
