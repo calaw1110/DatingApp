@@ -20,7 +20,9 @@
             "tsConfig": "projects/datingapp-client/tsconfig.app.json",
             "assets": [
               "projects/datingapp-client/src/favicon.ico",
-              "projects/datingapp-client/src/assets"
+              "projects/datingapp-client/src/assets",
+              "projects/datingapp-client/src/manifest.webmanifest",
+              "projects/datingapp-client/src/manifest.webmanifest"
             ],
             "styles": [
               "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
@@ -34,7 +36,9 @@
             "allowedCommonJsDependencies":[
             "crypto-js"
             ],
-            "scripts": []
+            "scripts": [],
+            "serviceWorker": true,
+            "ngswConfigPath": "projects/datingapp-client/ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -108,7 +112,9 @@
             "karmaConfig": "projects/datingapp-client/karma.conf.js",
             "assets": [
               "projects/datingapp-client/src/favicon.ico",
-              "projects/datingapp-client/src/assets"
+              "projects/datingapp-client/src/assets",
+              "projects/datingapp-client/src/manifest.webmanifest",
+              "projects/datingapp-client/src/manifest.webmanifest"
             ],
             "styles": ["projects/datingapp-client/src/styles.css"],
             "scripts": []

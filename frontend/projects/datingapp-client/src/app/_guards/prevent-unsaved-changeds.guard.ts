@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanDeactivate, } from '@angular/router';
+
 import { Observable, of } from 'rxjs';
 import { MemberEditComponent } from '../members/member-edit/member-edit.component';
 import { ConfirmService } from './../_services/confirm.service';
@@ -7,7 +7,7 @@ import { ConfirmService } from './../_services/confirm.service';
 @Injectable({
     providedIn: 'root'
 })
-export class PreventUnsavedChangedsGuard implements CanDeactivate<MemberEditComponent> {
+export class PreventUnsavedChangedsGuard  {
     /**
      * 當使用者要離開這個 Guard 所防守的路由時，會觸發這個函式
      *

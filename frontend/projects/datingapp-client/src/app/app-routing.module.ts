@@ -16,30 +16,30 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { MessagesComponent } from './messages/messages.component';
 
 const routes: Routes = [
-    { path: '', component: HomeComponent },
-    {
-        path: '',
-        runGuardsAndResolvers: 'always',
-        canActivate: [AuthGuard],
-        children: [
-            { path: 'members', component: MemberListComponent },
-            // 進入/members/:username時，會先觸發resovle 提前取得 member 資料 ，由 MemberDetailComponent 從 route.data[key] 取得資料
-            // resolve: { member: MemberDetailedResolver } member 為 自定義存放進route.data裡的key
-            { path: 'members/:username', component: MemberDetailComponent, resolve: { member: MemberDetailedResolver } },
-            { path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangedsGuard] },
-            { path: 'lists', component: ListsComponent },
-            { path: 'messages', component: MessagesComponent },
-            { path: 'admin', component: AdminPanelComponent, canActivate: [AdminGuard] },
-        ]
-    },
-    { path: 'test-error', component: TestErrorComponent },
-    { path: 'not-found', component: NotFoundComponent },
-    { path: 'server-error', component: ServerErrorComponent },
-    { path: '**', component: NotFoundComponent, pathMatch: 'full' },
+  { path: '', component: HomeComponent },
+  {
+    path: '',
+    runGuardsAndResolvers: 'always',
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'members', component: MemberListComponent },
+      // 進入/members/:username時，會先觸發resovle 提前取得 member 資料 ，由 MemberDetailComponent 從 route.data[key] 取得資料
+      // resolve: { member: MemberDetailedResolver } member 為 自定義存放進route.data裡的key
+      { path: 'members/:username', component: MemberDetailComponent, resolve: { member: MemberDetailedResolver } },
+      { path: 'member/edit', component: MemberEditComponent, canDeactivate: [PreventUnsavedChangedsGuard] },
+      { path: 'lists', component: ListsComponent },
+      { path: 'messages', component: MessagesComponent },
+      { path: 'admin', component: AdminPanelComponent, canActivate: [AdminGuard] },
+    ]
+  },
+  { path: 'test-error', component: TestErrorComponent },
+  { path: 'not-found', component: NotFoundComponent },
+  { path: 'server-error', component: ServerErrorComponent },
+  { path: '**', component: NotFoundComponent, pathMatch: 'full' },
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
 })
 export class AppRoutingModule { }
