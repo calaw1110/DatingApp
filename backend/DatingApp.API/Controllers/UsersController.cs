@@ -24,7 +24,7 @@ namespace DatingApp.API.Controllers
 			this._photoService = photoService;
 		}
 
-		// [FromQuery] ¥Î©ó±q HTTP ½Ğ¨Dªº¬d¸ß¦r²Å¦ê¡]§Y URL ¤¤? «á­±ªº³¡¤À¡^¤¤¸j©w°Ñ¼Æªº­È¡C
+		// [FromQuery] ç”¨æ–¼å¾ HTTP è«‹æ±‚çš„æŸ¥è©¢å­—ç¬¦ä¸²ï¼ˆå³ URL ä¸­? å¾Œé¢çš„éƒ¨åˆ†ï¼‰ä¸­ç¶å®šåƒæ•¸çš„å€¼ã€‚
 		[HttpGet]
 		public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
 		{
@@ -54,33 +54,33 @@ namespace DatingApp.API.Controllers
 		[HttpPut]
 		public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
 		{
-			// ¨ú±oµn¤JÅçÃÒ¸ê°T
+			// å–å¾—ç™»å…¥é©—è­‰è³‡è¨Š
 			var username = User.GetUsername();
 
-			// ¨ú±oµn¤JªÌ¸Ô²Ó¸ê®Æ
+			// å–å¾—ç™»å…¥è€…è©³ç´°è³‡æ–™
 			var user = await _uow.UserRepository.GetUserByUsernameAsync(username);
 
 			if (user == null) return NotFound();
 
-			// ±Ndto¸ê®Æ§ó·s¦Üuser¸ê®Æ
+			// å°‡dtoè³‡æ–™æ›´æ–°è‡³userè³‡æ–™
 			_mapper.Map(memberUpdateDto, user);
 
-			// §ó·s¸ê®Æ®w¸ê®Æ
+			// æ›´æ–°è³‡æ–™åº«è³‡æ–™
 			if (await _uow.Complete())
-				// §ó·s¦¨¥\ ¨Ï¥Î status code 204 ¦^¶Ç
+				// æ›´æ–°æˆåŠŸ ä½¿ç”¨ status code 204 å›å‚³
 				return NoContent();
 
-			// §ó·s¥¢±Ñ ¨Ï¥Î status code 400 ¦^¶Ç
+			// æ›´æ–°å¤±æ•— ä½¿ç”¨ status code 400 å›å‚³
 			return BadRequest("Failed to update user");
 		}
 
 		[HttpPost("add-photo")]
 		public async Task<ActionResult<PhotoDto>> AddPhoto(IFormFile file)
 		{
-			// ¨ú±oµn¤JÅçÃÒ¸ê°T
+			// å–å¾—ç™»å…¥é©—è­‰è³‡è¨Š
 			var username = User.GetUsername();
 
-			// ¨ú±oµn¤JªÌ¸Ô²Ó¸ê®Æ
+			// å–å¾—ç™»å…¥è€…è©³ç´°è³‡æ–™
 			var user = await _uow.UserRepository.GetUserByUsernameAsync(username);
 
 			if (user == null) return NotFound();

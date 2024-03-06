@@ -4,12 +4,12 @@ namespace DatingApp.API.Entities
 {
 	public class AppUser : IdentityUser<int>
 	{
-		// DateOnly .net6¤~¶}¨Ï¦³ -> ³æ¯Â°w¹ï¬Y¤é
+		// DateOnly .net6æ‰é–‹ä½¿æœ‰ -> å–®ç´”é‡å°æŸæ—¥
 		public DateOnly DateOfBirth { get; set; }
 
 		public string KnownAs { get; set; }
 
-		// ¤£¦P®É°Ïªº¨Ï¥ÎªÌ
+		// ä¸åŒæ™‚å€çš„ä½¿ç”¨è€…
 		public DateTime Created { get; set; } = DateTime.UtcNow;
 
 		public DateTime LastActive { get; set; } = DateTime.UtcNow;

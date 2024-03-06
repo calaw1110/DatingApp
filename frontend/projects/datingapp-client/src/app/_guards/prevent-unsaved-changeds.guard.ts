@@ -9,7 +9,7 @@ import { ConfirmService } from './../_services/confirm.service';
 })
 export class PreventUnsavedChangedsGuard  {
     /**
-     * 當使用者要離開這個 Guard 所防守的路由時，會觸發這個函式
+     * 當使用者要離開的頁面含有 form 表單 且表單有被異動過 就會觸發
      *
      * @param {MemberEditComponent} component - 該路由的 Component
      * @returns {(boolean)}
